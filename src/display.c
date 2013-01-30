@@ -6,6 +6,13 @@
 #include <allegro5/allegro.h>
 #include "mruby-allegro.h"
 
+#define Get_Display(mrb, obj, sval) do {\
+  Data_Get_Struct(mrb, obj, &display_data_type, sval);\
+  if (!sval) {\
+    mrb_raise(mrb, E_ALLEGRO_ERROR, "display is destroyed");\
+  }\
+} while(0)
+
 static void
 display_free(mrb_state *mrb, void *p)
 {
@@ -60,11 +67,9 @@ destroyed(mrb_state *mrb, mrb_value self)
 static mrb_value
 window_title_setter(mrb_state *mrb, mrb_value self)
 {
-  ALLEGRO_DISPLAY *d = DATA_PTR(self);
+  ALLEGRO_DISPLAY *d;
   mrb_value s;
-  if (!d) {
-    mrb_raise(mrb, E_ALLEGRO_ERROR, "display is destroyed");
-  }
+  Get_Display(mrb, self, d);
   mrb_get_args(mrb, "S", &s);
   al_set_window_title(d, mrb_string_value_cstr(mrb, &s));
   return s;
@@ -76,9 +81,7 @@ resize(mrb_state *mrb, mrb_value self)
   ALLEGRO_DISPLAY *d = DATA_PTR(self);
   mrb_int w;
   mrb_int h;
-  if (!d) {
-    mrb_raise(mrb, E_ALLEGRO_ERROR, "display is destroyed");
-  }
+  Get_Display(mrb, self, d);
   mrb_get_args(mrb, "ii", &w, &h);
   return mrb_bool_value(al_resize_display(d, w, h));
 }
@@ -90,9 +93,7 @@ window_position_getter(mrb_state *mrb, mrb_value self)
   int w;
   int h;
   mrb_value a;
-  if (!d) {
-    mrb_raise(mrb, E_ALLEGRO_ERROR, "display is destroyed");
-  }
+  Get_Display(mrb, self, d);
   al_get_window_position(d, &w, &h);
   a = mrb_ary_new_capa(mrb, 2);
   mrb_ary_push(mrb, a, mrb_fixnum_value(w));
@@ -106,13 +107,11 @@ window_position_setter(mrb_state *mrb, mrb_value self)
   ALLEGRO_DISPLAY *d = DATA_PTR(self);
   mrb_value a;
   mrb_value *p;
-  if (!d) {
-    mrb_raise(mrb, E_ALLEGRO_ERROR, "display is destroyed");
-  }
+  Get_Display(mrb, self, d);
   mrb_get_args(mrb, "A", &a);
-  // if (RARRAY_LEN(a) != 2) {
-  //   mrb_raise(mrb, E_ALLEGRO_ERROR, __func__);
-  // }
+  if (RARRAY_LEN(a) != 2) {
+    mrb_raise(mrb, E_ARGUMENT_ERROR, "expected Array with 2 elements");
+  }
   p = RARRAY_PTR(a);
   if (!mrb_fixnum_p(p[0]) || !mrb_fixnum_p(p[1])) {
     mrb_raise(mrb, E_TYPE_ERROR, "expected Fixnum");
@@ -124,20 +123,16 @@ window_position_setter(mrb_state *mrb, mrb_value self)
 static mrb_value
 width_getter(mrb_state *mrb, mrb_value self)
 {
-  ALLEGRO_DISPLAY *d = DATA_PTR(self);
-  if (!d) {
-    mrb_raise(mrb, E_ALLEGRO_ERROR, "display is destroyed");
-  }
+  ALLEGRO_DISPLAY *d;
+  Get_Display(mrb, self, d);
   return mrb_fixnum_value(al_get_display_width(d));
 }
 
 static mrb_value
 height_getter(mrb_state *mrb, mrb_value self)
 {
-  ALLEGRO_DISPLAY *d = DATA_PTR(self);
-  if (!d) {
-    mrb_raise(mrb, E_ALLEGRO_ERROR, "display is destroyed");
-  }
+  ALLEGRO_DISPLAY *d;
+  Get_Display(mrb, self, d);
   return mrb_fixnum_value(al_get_display_height(d));
 }
 
