@@ -28,7 +28,7 @@ initialize(mrb_state *mrb, mrb_value self)
   DATA_TYPE(self) = &font_data_type;
   DATA_PTR(self) = NULL;
   mrb_get_args(mrb, "Si|*", &s, &i, &rv, &rc);
-  f = al_load_font(mrb_string_value_cstr(mrb, &s), i, 0);
+  f = al_load_font(mrb_string_value_cstr(mrb, &s), clamp_int(i), 0);
   if (!f) {
     mrb_raise(mrb, E_ALLEGRO_ERROR, "failed to load font");
   }
@@ -83,5 +83,5 @@ mruby_allegro_font_init(mrb_state *mrb)
   MRB_SET_INSTANCE_TT(fc, MRB_TT_DATA);
   mrb_define_alias(mrb, fc->c, "load", "new");
   mrb_define_method(mrb, fc, "initialize", initialize, ARGS_REQ(2) | ARGS_REST());
-  mrb_define_class_method(mrb, am, "draw_text", draw_text, ARGS_REQ(5) | ARGS_OPT(1));
+  mrb_define_class_method(mrb, am, "draw_text", draw_text, ARGS_REQ(5) | ARGS_OPT(2));
 }

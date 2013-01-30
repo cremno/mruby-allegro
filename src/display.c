@@ -39,7 +39,7 @@ initialize(mrb_state *mrb, mrb_value self)
   DATA_TYPE(self) = &display_data_type;
   DATA_PTR(self) = NULL;
   mrb_get_args(mrb, "ii", &w, &h);
-  d = al_create_display(w, h);
+  d = al_create_display(clamp_int(w), clamp_int(h));
   if (!d) {
     mrb_raise(mrb, E_ALLEGRO_ERROR, "failed to initialize display");
   }
@@ -83,7 +83,7 @@ resize(mrb_state *mrb, mrb_value self)
   mrb_int h;
   Get_Display(mrb, self, d);
   mrb_get_args(mrb, "ii", &w, &h);
-  return mrb_bool_value(al_resize_display(d, w, h));
+  return mrb_bool_value(al_resize_display(d, clamp_int(w), clamp_int(h)));
 }
 
 static mrb_value

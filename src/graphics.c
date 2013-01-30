@@ -29,7 +29,7 @@ color_initialize(mrb_state *mrb, mrb_value self)
   	mrb_raise(mrb, E_ALLEGRO_ERROR, __func__);
   }
   DATA_PTR(self) = c;
-  *c = al_map_rgb(r, g, b);
+  *c = al_map_rgb(clamp_u8(r), clamp_u8(g), clamp_u8(b));
   return self;
 }
 
