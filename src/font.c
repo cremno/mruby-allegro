@@ -44,14 +44,34 @@ draw_text(mrb_state *mrb, mrb_value self)
   mrb_float x;
   mrb_float y;
   mrb_value s;
-  mrb_value *rv;
-  mrb_int rc;
+  mrb_sym alignment;
+  mrb_sym integer;
   ALLEGRO_FONT *af;
   ALLEGRO_COLOR *ac;
-  mrb_get_args(mrb, "ooffS|*", &f, &c, &x, &y, &s, &rv, &rc);
+  int flags = 0;
+  switch (mrb_get_args(mrb, "ooffS|nn", &f, &c, &x, &y, &s, &alignment, &integer)) {
+  case 7:
+    if (integer == mrb_intern2(mrb, "integer", 7)) {
+      flags |= ALLEGRO_ALIGN_INTEGER;
+    } else {
+      mrb_raise(mrb, E_TYPE_ERROR, "expected Symbol: :integer");
+    }
+  case 6:
+    if (alignment == mrb_intern2(mrb, "center", 6)) {
+      flags |= ALLEGRO_ALIGN_CENTER;
+    } else if (alignment == mrb_intern2(mrb, "right", 5)) {
+      flags |= ALLEGRO_ALIGN_RIGHT;
+    // } else if (alignment == mrb_intern2(mrb, "left", 4)) {
+    //   flags |= ALLEGRO_ALIGN_LEFT;
+    } else {
+      mrb_raise(mrb, E_TYPE_ERROR, "expected Symbol: :center, :right or :left");
+    }
+  default:
+    break;
+  }
   Data_Get_Struct(mrb, f, &font_data_type, af);
   Data_Get_Struct(mrb, c, &color_data_type, ac);
-  al_draw_text(af, *ac, x, y, 0, mrb_string_value_cstr(mrb, &s));
+  al_draw_text(af, *ac, x, y, flags, mrb_string_value_cstr(mrb, &s));
   return mrb_nil_value();
 }
 
