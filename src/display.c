@@ -78,7 +78,7 @@ window_title_setter(mrb_state *mrb, mrb_value self)
 static mrb_value
 resize(mrb_state *mrb, mrb_value self)
 {
-  ALLEGRO_DISPLAY *d = DATA_PTR(self);
+  ALLEGRO_DISPLAY *d;
   mrb_int w;
   mrb_int h;
   Get_Display(mrb, self, d);
@@ -89,7 +89,7 @@ resize(mrb_state *mrb, mrb_value self)
 static mrb_value
 window_position_getter(mrb_state *mrb, mrb_value self)
 {
-  ALLEGRO_DISPLAY *d = DATA_PTR(self);
+  ALLEGRO_DISPLAY *d;
   int w;
   int h;
   mrb_value a;
@@ -104,7 +104,7 @@ window_position_getter(mrb_state *mrb, mrb_value self)
 static mrb_value
 window_position_setter(mrb_state *mrb, mrb_value self)
 {
-  ALLEGRO_DISPLAY *d = DATA_PTR(self);
+  ALLEGRO_DISPLAY *d;
   mrb_value a;
   mrb_value *p;
   Get_Display(mrb, self, d);
