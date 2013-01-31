@@ -29,3 +29,15 @@ clamp_int(mrb_int i)
     }
   }
 }
+
+float
+clamp_f(mrb_float i)
+{
+  if (i > 1.f) {
+    return 1.f;
+  } else if (i < 0.f) {
+    return 0.f;
+  } else {
+    return (float)i;
+  }
+}

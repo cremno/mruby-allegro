@@ -14,5 +14,6 @@ extern struct mrb_data_type font_data_type;
 
 uint8_t clamp_u8(mrb_int);
 int clamp_int(mrb_int);
+float clamp_f(mrb_float);
 
 #endif
