@@ -54,8 +54,9 @@ draw_text(mrb_state *mrb, mrb_value self)
     if (integer == mrb_intern2(mrb, "integer", 7)) {
       flags |= ALLEGRO_ALIGN_INTEGER;
     } else {
-      mrb_raise(mrb, E_TYPE_ERROR, "expected Symbol: :integer");
+      mrb_raisef(mrb, E_ARGUMENT_ERROR, "invalid symbol: %s, valid symbol: :integer", mrb_sym2name(mrb, integer));
     }
+    // FALL TROUGH
   case 6:
     if (alignment == mrb_intern2(mrb, "center", 6)) {
       flags |= ALLEGRO_ALIGN_CENTER;
@@ -64,8 +65,9 @@ draw_text(mrb_state *mrb, mrb_value self)
     // } else if (alignment == mrb_intern2(mrb, "left", 4)) {
     //   flags |= ALLEGRO_ALIGN_LEFT;
     } else {
-      mrb_raise(mrb, E_TYPE_ERROR, "expected Symbol: :center, :right or :left");
+      mrb_raisef(mrb, E_ARGUMENT_ERROR, "invalid symbol: %s, valid symbols: :center, :right or :left", mrb_sym2name(mrb, alignment));
     }
+    break;
   default:
     break;
   }
