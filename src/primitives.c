@@ -206,16 +206,16 @@ void
 mruby_allegro_primitives_init(mrb_state *mrb)
 {
   struct RClass *am = ALLEGRO_MODULE;
-  mrb_define_class_method(mrb, am, "draw_line", draw_line, ARGS_REQ(6));
-  mrb_define_class_method(mrb, am, "draw_triangle", draw_triangle, ARGS_REQ(8));
-  mrb_define_class_method(mrb, am, "draw_filled_triangle", draw_filled_triangle, ARGS_REQ(7));
-  mrb_define_class_method(mrb, am, "draw_rectangle", draw_rectangle, ARGS_REQ(6));
-  mrb_define_class_method(mrb, am, "draw_filled_rectangle", draw_filled_rectangle, ARGS_REQ(5));
-  mrb_define_class_method(mrb, am, "draw_rounded_rectangle", draw_rounded_rectangle, ARGS_REQ(8));
-  mrb_define_class_method(mrb, am, "draw_filled_rounded_rectangle", draw_filled_rounded_rectangle, ARGS_REQ(7));
-  mrb_define_class_method(mrb, am, "draw_circle", draw_circle, ARGS_REQ(5));
-  mrb_define_class_method(mrb, am, "draw_filled_circle", draw_filled_circle, ARGS_REQ(4));
-  mrb_define_class_method(mrb, am, "draw_ellipse", draw_ellipse, ARGS_REQ(6));
-  mrb_define_class_method(mrb, am, "draw_filled_ellipse", draw_filled_ellipse, ARGS_REQ(5));
-  mrb_define_class_method(mrb, am, "draw_spline", draw_spline, ARGS_REQ(10));
+  mrb_define_module_function(mrb, am, "draw_line", draw_line, ARGS_REQ(6));
+  mrb_define_module_function(mrb, am, "draw_triangle", draw_triangle, ARGS_REQ(8));
+  mrb_define_module_function(mrb, am, "draw_filled_triangle", draw_filled_triangle, ARGS_REQ(7));
+  mrb_define_module_function(mrb, am, "draw_rectangle", draw_rectangle, ARGS_REQ(6));
+  mrb_define_module_function(mrb, am, "draw_filled_rectangle", draw_filled_rectangle, ARGS_REQ(5));
+  mrb_define_module_function(mrb, am, "draw_rounded_rectangle", draw_rounded_rectangle, ARGS_REQ(8));
+  mrb_define_module_function(mrb, am, "draw_filled_rounded_rectangle", draw_filled_rounded_rectangle, ARGS_REQ(7));
+  mrb_define_module_function(mrb, am, "draw_circle", draw_circle, ARGS_REQ(5));
+  mrb_define_module_function(mrb, am, "draw_filled_circle", draw_filled_circle, ARGS_REQ(4));
+  mrb_define_module_function(mrb, am, "draw_ellipse", draw_ellipse, ARGS_REQ(6));
+  mrb_define_module_function(mrb, am, "draw_filled_ellipse", draw_filled_ellipse, ARGS_REQ(5));
+  mrb_define_module_function(mrb, am, "draw_spline", draw_spline, ARGS_REQ(10));
 }
