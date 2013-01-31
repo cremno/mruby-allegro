@@ -1,3 +1,4 @@
+#include <stddef.h>
 #include <mruby.h>
 #include <mruby/class.h>
 #include <mruby/data.h>
@@ -191,7 +192,7 @@ draw_spline(mrb_state *mrb, mrb_value self)
   mrb_float thickness;
   float points[8];
   ALLEGRO_COLOR *ac;
-  int i;
+  size_t i;
   mrb_get_args(mrb, "ffffffffof", &f[0], &f[1], &f[2], &f[3], &f[4], &f[5], &f[6], &f[7], &c, &thickness);
   Data_Get_Struct(mrb, c, &color_data_type, ac);
   for (i = 0; i < 8; ++i) {
