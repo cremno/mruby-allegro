@@ -7,6 +7,25 @@
 #include "mruby-allegro.h"
 
 static mrb_value
+version(mrb_state *mrb, mrb_value self)
+{
+  return version_to_hash(mrb, al_get_allegro_primitives_version());
+}
+
+static mrb_value
+init(mrb_state *mrb, mrb_value self)
+{
+  return mrb_bool_value(al_init_primitives_addon());
+}
+
+static mrb_value
+shutdown_addon(mrb_state *mrb, mrb_value self)
+{
+  al_shutdown_primitives_addon();
+  return mrb_nil_value();
+}
+
+static mrb_value
 draw_line(mrb_state *mrb, mrb_value self)
 {
   mrb_float x1;
@@ -124,6 +143,39 @@ draw_filled_rounded_rectangle(mrb_state *mrb, mrb_value self)
 }
 
 static mrb_value
+draw_pieslice(mrb_state *mrb, mrb_value self)
+{
+  mrb_float cx;
+  mrb_float cy;
+  mrb_float r;
+  mrb_float start_theta;
+  mrb_float delta_theta;
+  mrb_value c;
+  mrb_float thickness;
+  ALLEGRO_COLOR *ac;
+  mrb_get_args(mrb, "fffffof", &cx, &cy, &r, &start_theta, &delta_theta, &c, &thickness);
+  Data_Get_Struct(mrb, c, &color_data_type, ac);
+  al_draw_pieslice(cx, cy, r, start_theta, delta_theta, *ac, thickness);
+  return mrb_nil_value();
+}
+
+static mrb_value
+draw_filled_pieslice(mrb_state *mrb, mrb_value self)
+{
+  mrb_float cx;
+  mrb_float cy;
+  mrb_float r;
+  mrb_float start_theta;
+  mrb_float delta_theta;
+  mrb_value c;
+  ALLEGRO_COLOR *ac;
+  mrb_get_args(mrb, "fffffo", &cx, &cy, &r, &start_theta, &delta_theta, &c);
+  Data_Get_Struct(mrb, c, &color_data_type, ac);
+  al_draw_filled_pieslice(cx, cy, r, start_theta, delta_theta, *ac);
+  return mrb_nil_value();
+}
+
+static mrb_value
 draw_circle(mrb_state *mrb, mrb_value self)
 {
   mrb_float cx;
@@ -152,6 +204,40 @@ draw_filled_circle(mrb_state *mrb, mrb_value self)
   return mrb_nil_value();
 }
 
+static mrb_value
+draw_arc(mrb_state *mrb, mrb_value self)
+{
+  mrb_float cx;
+  mrb_float cy;
+  mrb_float r;
+  mrb_float start_theta;
+  mrb_float delta_theta;
+  mrb_value c;
+  mrb_float thickness;
+  ALLEGRO_COLOR *ac;
+  mrb_get_args(mrb, "fffffof", &cx, &cy, &r, &start_theta, &delta_theta, &c, &thickness);
+  Data_Get_Struct(mrb, c, &color_data_type, ac);
+  al_draw_arc(cx, cy, r, start_theta, delta_theta, *ac, thickness);
+  return mrb_nil_value();
+}
+
+static mrb_value
+draw_elliptical_arc(mrb_state *mrb, mrb_value self)
+{
+  mrb_float cx;
+  mrb_float cy;
+  mrb_float rx;
+  mrb_float ry;
+  mrb_float start_theta;
+  mrb_float delta_theta;
+  mrb_value c;
+  mrb_float thickness;
+  ALLEGRO_COLOR *ac;
+  mrb_get_args(mrb, "ffffffof", &cx, &cy, &rx, &ry, &start_theta, &delta_theta, &c, &thickness);
+  Data_Get_Struct(mrb, c, &color_data_type, ac);
+  al_draw_elliptical_arc(cx, cy, rx, ry, start_theta, delta_theta, *ac, thickness);
+  return mrb_nil_value();
+}
 
 static mrb_value
 draw_ellipse(mrb_state *mrb, mrb_value self)
@@ -206,6 +292,9 @@ void
 mruby_allegro_primitives_init(mrb_state *mrb)
 {
   struct RClass *am = ALLEGRO_MODULE;
+  mrb_define_class_method(mrb, am, "primitives_version", version, ARGS_NONE());
+  mrb_define_class_method(mrb, am, "init_primitives_addon", init, ARGS_NONE());
+  mrb_define_class_method(mrb, am, "shutdown_primitives_addon", shutdown_addon, ARGS_NONE());
   mrb_define_module_function(mrb, am, "draw_line", draw_line, ARGS_REQ(6));
   mrb_define_module_function(mrb, am, "draw_triangle", draw_triangle, ARGS_REQ(8));
   mrb_define_module_function(mrb, am, "draw_filled_triangle", draw_filled_triangle, ARGS_REQ(7));
@@ -213,9 +302,13 @@ mruby_allegro_primitives_init(mrb_state *mrb)
   mrb_define_module_function(mrb, am, "draw_filled_rectangle", draw_filled_rectangle, ARGS_REQ(5));
   mrb_define_module_function(mrb, am, "draw_rounded_rectangle", draw_rounded_rectangle, ARGS_REQ(8));
   mrb_define_module_function(mrb, am, "draw_filled_rounded_rectangle", draw_filled_rounded_rectangle, ARGS_REQ(7));
-  mrb_define_module_function(mrb, am, "draw_circle", draw_circle, ARGS_REQ(5));
-  mrb_define_module_function(mrb, am, "draw_filled_circle", draw_filled_circle, ARGS_REQ(4));
+  mrb_define_module_function(mrb, am, "draw_pieslice", draw_pieslice, ARGS_REQ(7));
+  mrb_define_module_function(mrb, am, "draw_filled_pieslice", draw_filled_pieslice, ARGS_REQ(6));
   mrb_define_module_function(mrb, am, "draw_ellipse", draw_ellipse, ARGS_REQ(6));
   mrb_define_module_function(mrb, am, "draw_filled_ellipse", draw_filled_ellipse, ARGS_REQ(5));
+  mrb_define_module_function(mrb, am, "draw_circle", draw_circle, ARGS_REQ(5));
+  mrb_define_module_function(mrb, am, "draw_filled_circle", draw_filled_circle, ARGS_REQ(4));
+  mrb_define_module_function(mrb, am, "draw_arc", draw_arc, ARGS_REQ(7));
+  mrb_define_module_function(mrb, am, "draw_elliptical_arc", draw_elliptical_arc, ARGS_REQ(8));
   mrb_define_module_function(mrb, am, "draw_spline", draw_spline, ARGS_REQ(10));
 }
