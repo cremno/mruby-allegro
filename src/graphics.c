@@ -41,7 +41,7 @@ color_rgb(mrb_state *mrb, mrb_value self)
   if (!c) {
     mrb_raise(mrb, E_ALLEGRO_ERROR, __func__);
   }
-  *c = al_map_rgb(clamp_u8(r), clamp_u8(g), clamp_u8(b));
+  *c = al_map_rgb(clamp_uc(r), clamp_uc(g), clamp_uc(b));
   return mrb_obj_value(Data_Wrap_Struct(mrb, mrb_class_ptr(self), &color_data_type, c));
 }
 
@@ -58,7 +58,7 @@ color_rgba(mrb_state *mrb, mrb_value self)
   if (!c) {
     mrb_raise(mrb, E_ALLEGRO_ERROR, __func__);
   }
-  *c = al_map_rgba(clamp_u8(r), clamp_u8(g), clamp_u8(b), clamp_u8(a));
+  *c = al_map_rgba(clamp_uc(r), clamp_uc(g), clamp_uc(b), clamp_uc(a));
   return mrb_obj_value(Data_Wrap_Struct(mrb, mrb_class_ptr(self), &color_data_type, c));
 }
 

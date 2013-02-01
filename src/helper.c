@@ -1,12 +1,21 @@
 #include <limits.h>
 #include <stdint.h>
 #include <mruby.h>
+#include <mruby/class.h>
+#include <mruby/variable.h>
+#include "mruby-allegro.h"
 
-uint8_t
-clamp_u8(mrb_int i)
+struct RClass *
+get_allegro_const(mrb_state *mrb, const char *name, int len)
 {
-  if (i > UINT8_MAX) {
-    return UINT8_MAX;
+  return mrb_class_ptr(mrb_const_get(mrb, mrb_obj_value(M_ALLEGRO), mrb_intern2(mrb, name, len)));
+}
+
+unsigned char
+clamp_uc(mrb_int i)
+{
+  if (i > UCHAR_MAX) {
+    return UCHAR_MAX;
   } else if (i < 0) {
     return 0;
   } else {

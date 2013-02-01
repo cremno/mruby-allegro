@@ -6,12 +6,7 @@
 #include <allegro5/allegro.h>
 #include "mruby-allegro.h"
 
-#define Get_Display(mrb, obj, sval) do {\
-  Data_Get_Struct(mrb, obj, &display_data_type, sval);\
-  if (!sval) {\
-    mrb_raise(mrb, E_ALLEGRO_ERROR, "display is destroyed");\
-  }\
-} while(0)
+#define Get_Display(mrb, obj, sval) Check_Destroyed(mrb, obj, display, sval)
 
 static void
 display_free(mrb_state *mrb, void *p)
@@ -37,7 +32,6 @@ initialize(mrb_state *mrb, mrb_value self)
   mrb_int h;
   ALLEGRO_DISPLAY *d;
   DATA_TYPE(self) = &display_data_type;
-  DATA_PTR(self) = NULL;
   mrb_get_args(mrb, "ii", &w, &h);
   d = al_create_display(clamp_int(w), clamp_int(h));
   if (!d) {
@@ -61,7 +55,7 @@ destroy(mrb_state *mrb, mrb_value self)
 static mrb_value
 destroyed(mrb_state *mrb, mrb_value self)
 {
-  return mrb_bool_value(!DATA_PTR(self));
+  return Destroyed(self);
 }
 
 static mrb_value
@@ -151,6 +145,16 @@ inhibit_screensaver_setter(mrb_state *mrb, mrb_value self)
   return mrb_bool_value(b);
 }
 
+static mrb_value
+event_source(mrb_state *mrb, mrb_value self)
+{
+  ALLEGRO_DISPLAY *d;
+  ALLEGRO_EVENT_SOURCE *es;
+  Check_Destroyed(mrb, self, display, d);
+  es = al_get_display_event_source(d);
+  return mrb_obj_value(Data_Wrap_Struct(mrb, C_ALLEGRO_EVENTSOURCE, &eventsource_data_type, es));
+}
+
 void
 mruby_allegro_display_init(mrb_state *mrb)
 {
@@ -158,16 +162,17 @@ mruby_allegro_display_init(mrb_state *mrb)
   struct RClass *dc = mrb_define_class_under(mrb, am, "Display", mrb->object_class);
   MRB_SET_INSTANCE_TT(dc, MRB_TT_DATA);
   mrb_define_alias(mrb, dc->c, "create", "new");
-  mrb_define_class_method(mrb, dc, "flip", flip, ARGS_NONE());
   mrb_define_method(mrb, dc, "initialize", initialize, ARGS_REQ(2));
   mrb_define_method(mrb, dc, "destroy", destroy, ARGS_NONE());
   mrb_define_method(mrb, dc, "destroyed?", destroyed, ARGS_NONE());
-  mrb_define_method(mrb, dc, "window_title=", window_title_setter, ARGS_REQ(1));
-  mrb_define_method(mrb, dc, "resize", resize, ARGS_REQ(2));
-  mrb_define_method(mrb, dc, "window_position", window_position_getter, ARGS_NONE());
-  mrb_define_method(mrb, dc, "window_position=", window_position_setter, ARGS_REQ(1));
-  mrb_define_method(mrb, dc, "width", width_getter, ARGS_NONE());
+  mrb_define_class_method(mrb, dc, "flip", flip, ARGS_NONE());
   mrb_define_method(mrb, dc, "height", height_getter, ARGS_NONE());
-  mrb_define_class_method(mrb, am, "wait_for_vsync", wait_for_vsync, ARGS_NONE());
+  mrb_define_method(mrb, dc, "width", width_getter, ARGS_NONE());
+  mrb_define_method(mrb, dc, "window_position", window_position_getter, ARGS_NONE());
   mrb_define_class_method(mrb, am, "inhibit_screensaver=", inhibit_screensaver_setter, ARGS_REQ(1));
+  mrb_define_method(mrb, dc, "resize", resize, ARGS_REQ(2));
+  mrb_define_method(mrb, dc, "window_position=", window_position_setter, ARGS_REQ(1));
+  mrb_define_method(mrb, dc, "window_title=", window_title_setter, ARGS_REQ(1));
+  mrb_define_class_method(mrb, am, "wait_for_vsync", wait_for_vsync, ARGS_NONE());
+  mrb_define_method(mrb, dc, "event_source", event_source, ARGS_NONE());
 }
