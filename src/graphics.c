@@ -18,12 +18,13 @@ static mrb_value
 color_initialize(mrb_state *mrb, mrb_value self)
 {
   ALLEGRO_COLOR *c;
+  ALLEGRO_COLOR cc = { 0.f, 0.f, 0.f, 1.f };
   DATA_TYPE(self) = &color_data_type;
   c = mrb_malloc(mrb, sizeof(*c));
   if (!c) {
-  	mrb_raise(mrb, E_ALLEGRO_ERROR, __func__);
+    mrb_raise(mrb, E_ALLEGRO_ERROR, __func__);
   }
-  *c = al_map_rgba_f(0.f, 0.f, 0.f, 1.f);
+  *c = cc;
   DATA_PTR(self) = c;
   return self;
 }
