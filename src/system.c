@@ -8,13 +8,7 @@
 static mrb_value
 version(mrb_state *mrb, mrb_value self)
 {
-  uint32_t v = al_get_allegro_version();
-  mrb_value h = mrb_hash_new_capa(mrb, 4);
-  mrb_hash_set(mrb, h, mrb_symbol_value(mrb_intern2(mrb, "major",    5)), mrb_fixnum_value((v >> 24) & 0xff));
-  mrb_hash_set(mrb, h, mrb_symbol_value(mrb_intern2(mrb, "minor",    5)), mrb_fixnum_value((v >> 16) & 0xff));
-  mrb_hash_set(mrb, h, mrb_symbol_value(mrb_intern2(mrb, "revision", 8)), mrb_fixnum_value((v >>  8) & 0xff));
-  mrb_hash_set(mrb, h, mrb_symbol_value(mrb_intern2(mrb, "release",  7)), mrb_fixnum_value((v >>  0) & 0xff));
-  return h;
+  return version_to_hash(mrb, al_get_allegro_version());
 }
 
 static mrb_value

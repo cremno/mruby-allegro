@@ -29,6 +29,8 @@ extern struct mrb_data_type font_data_type;
 
 struct RClass *get_allegro_const(mrb_state *, const char *, int);
 
+mrb_value version_to_hash(mrb_state *, uint32_t);
+
 unsigned char clamp_uc(mrb_int);
 int clamp_int(mrb_int);
 float clamp_f(mrb_float);
