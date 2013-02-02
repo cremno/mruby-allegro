@@ -6,6 +6,16 @@
 #include <mruby/variable.h>
 #include "mruby-allegro.h"
 
+void *
+safe_malloc(mrb_state *mrb, size_t n)
+{
+  void *p = mrb_malloc(mrb, n);
+  if (!p) {
+    mrb_raise(mrb, E_ALLEGRO_ERROR, "memory allocation failed");
+  }
+  return p;
+}
+
 struct RClass *
 get_allegro_const(mrb_state *mrb, const char *name, int len)
 {

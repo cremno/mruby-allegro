@@ -1,4 +1,3 @@
-#include <stdint.h>
 #include <mruby.h>
 #include <mruby/hash.h>
 #include <mruby/string.h>
