@@ -8,6 +8,7 @@
 #define ALLEGRO_MODULE (mrb_class_obj_get(mrb, "Al"))
 #define M_ALLEGRO (mrb_class_obj_get(mrb, "Al"))
 #define E_ALLEGRO_ERROR (mrb_class_obj_get(mrb, "AllegroError"))
+#define C_DISPLAY (get_allegro_const(mrb, "Display", 7))
 #define C_ALLEGRO_EVENT (get_allegro_const(mrb, "Event", 5))
 #define C_ALLEGRO_EVENTSOURCE (get_allegro_const(mrb, "EventSource", 11))
 

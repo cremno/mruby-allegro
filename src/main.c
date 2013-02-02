@@ -13,6 +13,7 @@ mrb_mruby_allegro_gem_init(mrb_state* mrb)
   extern void mruby_allegro_events_init(mrb_state *);
   extern void mruby_allegro_graphics_init(mrb_state *);
   extern void mruby_allegro_keyboard_init(mrb_state *);
+  extern void mruby_allegro_mouse_init(mrb_state *);
   extern void mruby_allegro_system_init(mrb_state *);
   extern void mruby_allegro_time_init(mrb_state *);
   extern void mruby_allegro_font_init(mrb_state *);
@@ -21,10 +22,12 @@ mrb_mruby_allegro_gem_init(mrb_state* mrb)
   int ai = mrb_gc_arena_save(mrb);
   mrb_define_module(mrb, "Al");
   mrb_define_class(mrb, "AllegroError", mrb->eStandardError_class);
+  mrb_gc_arena_restore(mrb, ai);
   mruby_allegro_display_init(mrb); mrb_gc_arena_restore(mrb, ai);
   mruby_allegro_events_init(mrb); mrb_gc_arena_restore(mrb, ai);
   mruby_allegro_graphics_init(mrb); mrb_gc_arena_restore(mrb, ai);
   mruby_allegro_keyboard_init(mrb); mrb_gc_arena_restore(mrb, ai);
+  mruby_allegro_mouse_init(mrb); mrb_gc_arena_restore(mrb, ai);
   mruby_allegro_system_init(mrb); mrb_gc_arena_restore(mrb, ai);
   mruby_allegro_time_init(mrb); mrb_gc_arena_restore(mrb, ai);
   mruby_allegro_font_init(mrb); mrb_gc_arena_restore(mrb, ai);
@@ -38,6 +41,10 @@ mrb_mruby_allegro_gem_init(mrb_state* mrb)
   if (!al_install_keyboard()) {
     fputs("failed to install a keyboard driver!\n", stderr);
     exit(EXIT_FAILURE);
+  }
+  if (!al_install_mouse()) {
+    fputs("failed to install a mouse driver!\n", stderr);
+    exit(EXIT_FAILURE); 
   }
   al_init_font_addon();
   if (!al_init_ttf_addon()) {

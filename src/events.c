@@ -1,7 +1,6 @@
 #include <mruby.h>
 #include <mruby/class.h>
 #include <mruby/data.h>
-#include <mruby/variable.h>
 #include <allegro5/allegro.h>
 #include "mruby-allegro.h"
 
@@ -35,10 +34,73 @@ event_type(mrb_state *mrb, mrb_value self)
 }
 
 static mrb_value
-event_keycode(mrb_state *mrb, mrb_value self)
+event_keyboard_keycode(mrb_state *mrb, mrb_value self)
 {
   ALLEGRO_EVENT *e = DATA_PTR(self);
   return mrb_fixnum_value(e->keyboard.keycode);
+}
+
+static mrb_value
+event_mouse_x(mrb_state *mrb, mrb_value self)
+{
+  ALLEGRO_EVENT *e = DATA_PTR(self);
+  return mrb_fixnum_value(e->mouse.x);
+}
+
+static mrb_value
+event_mouse_y(mrb_state *mrb, mrb_value self)
+{
+  ALLEGRO_EVENT *e = DATA_PTR(self);
+  return mrb_fixnum_value(e->mouse.y);
+}
+
+static mrb_value
+event_mouse_z(mrb_state *mrb, mrb_value self)
+{
+  ALLEGRO_EVENT *e = DATA_PTR(self);
+  return mrb_fixnum_value(e->mouse.z);
+}
+
+static mrb_value
+event_mouse_w(mrb_state *mrb, mrb_value self)
+{
+  ALLEGRO_EVENT *e = DATA_PTR(self);
+  return mrb_fixnum_value(e->mouse.w);
+}
+
+static mrb_value
+event_mouse_dx(mrb_state *mrb, mrb_value self)
+{
+  ALLEGRO_EVENT *e = DATA_PTR(self);
+  return mrb_fixnum_value(e->mouse.dx);
+}
+
+static mrb_value
+event_mouse_dy(mrb_state *mrb, mrb_value self)
+{
+  ALLEGRO_EVENT *e = DATA_PTR(self);
+  return mrb_fixnum_value(e->mouse.dy);
+}
+
+static mrb_value
+event_mouse_dz(mrb_state *mrb, mrb_value self)
+{
+  ALLEGRO_EVENT *e = DATA_PTR(self);
+  return mrb_fixnum_value(e->mouse.dz);
+}
+
+static mrb_value
+event_mouse_dw(mrb_state *mrb, mrb_value self)
+{
+  ALLEGRO_EVENT *e = DATA_PTR(self);
+  return mrb_fixnum_value(e->mouse.dw);
+}
+
+static mrb_value
+event_mouse_button(mrb_state *mrb, mrb_value self)
+{
+  ALLEGRO_EVENT *e = DATA_PTR(self);
+  return mrb_fixnum_value(e->mouse.button);
 }
 
 static mrb_value
@@ -103,10 +165,7 @@ eventqueue_wait_for_event(mrb_state *mrb, mrb_value self)
   ALLEGRO_EVENT_QUEUE *eq;
   ALLEGRO_EVENT *e;
   Check_Destroyed(mrb, self, eventqueue, eq);
-  e = mrb_malloc(mrb, sizeof(*e));
-  if (!e) {
-    mrb_raise(mrb, E_ALLEGRO_ERROR, __func__);
-  }
+  e = safe_malloc(mrb, sizeof(*e));
   al_wait_for_event(eq, e);
   return mrb_obj_value(Data_Wrap_Struct(mrb, C_ALLEGRO_EVENT, &event_data_type, e));
 }
@@ -121,7 +180,16 @@ mruby_allegro_events_init(mrb_state *mrb)
   MRB_SET_INSTANCE_TT(ec, MRB_TT_DATA);
   mrb_undef_class_method(mrb, ec, "new");
   mrb_define_method(mrb, ec, "type", event_type, ARGS_NONE());
-  mrb_define_method(mrb, ec, "keycode", event_keycode, ARGS_NONE());
+  mrb_define_method(mrb, ec, "keycode", event_keyboard_keycode, ARGS_NONE());
+  mrb_define_method(mrb, ec, "x", event_mouse_x, ARGS_NONE());
+  mrb_define_method(mrb, ec, "y", event_mouse_y, ARGS_NONE());
+  mrb_define_method(mrb, ec, "z", event_mouse_z, ARGS_NONE());
+  mrb_define_method(mrb, ec, "w", event_mouse_w, ARGS_NONE());
+  mrb_define_method(mrb, ec, "dx", event_mouse_dx, ARGS_NONE());
+  mrb_define_method(mrb, ec, "dy", event_mouse_dy, ARGS_NONE());
+  mrb_define_method(mrb, ec, "dz", event_mouse_dz, ARGS_NONE());
+  mrb_define_method(mrb, ec, "dw", event_mouse_dw, ARGS_NONE());
+  mrb_define_method(mrb, ec, "button", event_mouse_button, ARGS_NONE());
   MRB_SET_INSTANCE_TT(esc, MRB_TT_DATA);
   mrb_undef_class_method(mrb, esc, "new");
   MRB_SET_INSTANCE_TT(eqc, MRB_TT_DATA);
