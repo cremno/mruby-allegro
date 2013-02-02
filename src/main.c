@@ -6,6 +6,13 @@
 #include <allegro5/allegro_ttf.h>
 #include <allegro5/allegro_primitives.h>
 
+static void
+quit(const char *s)
+{
+  fputs(s, stderr);
+  exit(EXIT_FAILURE);
+}
+
 void
 mrb_mruby_allegro_gem_init(mrb_state* mrb)
 {
@@ -18,6 +25,7 @@ mrb_mruby_allegro_gem_init(mrb_state* mrb)
   extern void mruby_allegro_time_init(mrb_state *);
   extern void mruby_allegro_timer_init(mrb_state *);
   extern void mruby_allegro_font_init(mrb_state *);
+  extern void mruby_allegro_image_init(mrb_state *);
   extern void mruby_allegro_primitives_init(mrb_state *);
   extern void consts_init(mrb_state *);
   int ai = mrb_gc_arena_save(mrb);
@@ -33,29 +41,28 @@ mrb_mruby_allegro_gem_init(mrb_state* mrb)
   mruby_allegro_time_init(mrb); mrb_gc_arena_restore(mrb, ai);
   mruby_allegro_timer_init(mrb); mrb_gc_arena_restore(mrb, ai);
   mruby_allegro_font_init(mrb); mrb_gc_arena_restore(mrb, ai);
+  mruby_allegro_image_init(mrb); mrb_gc_arena_restore(mrb, ai);
   mruby_allegro_primitives_init(mrb); mrb_gc_arena_restore(mrb, ai);
   consts_init(mrb); mrb_gc_arena_restore(mrb, ai);
 #ifdef INIT_AT_START
   if (!al_init()) {
-    fputs("failed to initialize allegro!\n", stderr);
-    exit(EXIT_FAILURE);
+    quit("failed to initialize allegro!\n");
   }
   if (!al_install_keyboard()) {
-    fputs("failed to install a keyboard driver!\n", stderr);
-    exit(EXIT_FAILURE);
+    quit("failed to install a keyboard driver!\n");
   }
   if (!al_install_mouse()) {
-    fputs("failed to install a mouse driver!\n", stderr);
-    exit(EXIT_FAILURE); 
+    quit("failed to install a mouse driver!\n");
   }
   al_init_font_addon();
   if (!al_init_ttf_addon()) {
-    fputs("failed to initialize allegro ttf addon!\n", stderr);
-    exit(EXIT_FAILURE);
+    quit("failed to initialize allegro ttf addon!\n");
+  }
+  if (!al_init_image_addon()) {
+    quit("failed to initialize allegro image addon!\n");
   }
   if (!al_init_primitives_addon()){
-    fputs("failed to initialize allegro primitives addon!\n", stderr);
-    exit(EXIT_FAILURE);
+    quit("failed to initialize allegro primitives addon!\n");
   }
 #endif
 }
