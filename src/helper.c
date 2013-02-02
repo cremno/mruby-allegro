@@ -1,9 +1,11 @@
 #include <limits.h>
 #include <stdint.h>
+#include <stdarg.h>
 #include <mruby.h>
 #include <mruby/class.h>
 #include <mruby/hash.h>
 #include <mruby/variable.h>
+#include <allegro5/allegro.h>
 #include "mruby-allegro.h"
 
 void *
@@ -71,4 +73,31 @@ clamp_f(mrb_float i)
   } else {
     return (float)i;
   }
+}
+
+int
+bitmap_get_flags(mrb_state *mrb, unsigned argc, mrb_sym s1, mrb_sym s2) 
+{
+  mrb_sym fh = mrb_intern2(mrb, "flip_horizontal", 15);
+  mrb_sym fv = mrb_intern2(mrb, "flip_vertical", 13);
+  int flags = 0;
+  switch (argc) {
+  case 2:
+    if (s2 == fh) {
+      flags |= ALLEGRO_FLIP_HORIZONTAL;
+    } else if (s2 == fv) {
+      flags |= ALLEGRO_FLIP_VERTICAL;
+    }
+    // FALL TROUGH
+  case 1:
+    if (s1 == fh) {
+      flags |= ALLEGRO_FLIP_HORIZONTAL;
+    } else if (s1 == fv) {
+      flags |= ALLEGRO_FLIP_VERTICAL;
+    }
+    break;
+  default:
+    break;
+  }
+  return flags;
 }

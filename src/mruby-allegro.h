@@ -8,6 +8,8 @@
 #define ALLEGRO_MODULE (mrb_class_obj_get(mrb, "Al"))
 #define M_ALLEGRO (mrb_class_obj_get(mrb, "Al"))
 #define E_ALLEGRO_ERROR (mrb_class_obj_get(mrb, "AllegroError"))
+#define C_BITMAP (get_allegro_const(mrb, "Bitmap", 6))
+#define C_COLOR (get_allegro_const(mrb, "Color", 5))
 #define C_DISPLAY (get_allegro_const(mrb, "Display", 7))
 #define C_ALLEGRO_EVENT (get_allegro_const(mrb, "Event", 5))
 #define C_ALLEGRO_EVENTSOURCE (get_allegro_const(mrb, "EventSource", 11))
@@ -34,5 +36,6 @@ mrb_value version_to_hash(mrb_state *, uint32_t);
 unsigned char clamp_uc(mrb_int);
 int clamp_int(mrb_int);
 float clamp_f(mrb_float);
+int bitmap_get_flags(mrb_state *, unsigned, mrb_sym, mrb_sym);
 
 #endif
