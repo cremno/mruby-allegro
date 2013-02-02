@@ -160,6 +160,14 @@ eventqueue_unregister(mrb_state *mrb, mrb_value self)
 }
 
 static mrb_value
+eventqueue_empty(mrb_state *mrb, mrb_value self)
+{
+  ALLEGRO_EVENT_QUEUE* eq;
+  Check_Destroyed(mrb, self, eventqueue, eq);
+  return mrb_bool_value(al_is_event_queue_empty(eq));
+}
+
+static mrb_value
 eventqueue_wait_for_event(mrb_state *mrb, mrb_value self)
 {
   ALLEGRO_EVENT_QUEUE *eq;
@@ -199,5 +207,6 @@ mruby_allegro_events_init(mrb_state *mrb)
   mrb_define_method(mrb, eqc, "destroyed?", eventqueue_destroyed, ARGS_NONE());
   mrb_define_method(mrb, eqc, "register", eventqueue_register, ARGS_REQ(1));
   mrb_define_method(mrb, eqc, "unregister", eventqueue_unregister, ARGS_REQ(1));
+  mrb_define_method(mrb, eqc, "empty?", eventqueue_empty, ARGS_NONE());
   mrb_define_method(mrb, eqc, "wait_for_event", eventqueue_wait_for_event, ARGS_NONE());
 }

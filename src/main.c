@@ -16,6 +16,7 @@ mrb_mruby_allegro_gem_init(mrb_state* mrb)
   extern void mruby_allegro_mouse_init(mrb_state *);
   extern void mruby_allegro_system_init(mrb_state *);
   extern void mruby_allegro_time_init(mrb_state *);
+  extern void mruby_allegro_timer_init(mrb_state *);
   extern void mruby_allegro_font_init(mrb_state *);
   extern void mruby_allegro_primitives_init(mrb_state *);
   extern void consts_init(mrb_state *);
@@ -30,6 +31,7 @@ mrb_mruby_allegro_gem_init(mrb_state* mrb)
   mruby_allegro_mouse_init(mrb); mrb_gc_arena_restore(mrb, ai);
   mruby_allegro_system_init(mrb); mrb_gc_arena_restore(mrb, ai);
   mruby_allegro_time_init(mrb); mrb_gc_arena_restore(mrb, ai);
+  mruby_allegro_timer_init(mrb); mrb_gc_arena_restore(mrb, ai);
   mruby_allegro_font_init(mrb); mrb_gc_arena_restore(mrb, ai);
   mruby_allegro_primitives_init(mrb); mrb_gc_arena_restore(mrb, ai);
   consts_init(mrb); mrb_gc_arena_restore(mrb, ai);
