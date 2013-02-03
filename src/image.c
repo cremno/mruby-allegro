@@ -26,7 +26,7 @@ void
 mruby_allegro_image_init(mrb_state *mrb)
 {
   struct RClass *am = ALLEGRO_MODULE;
-  mrb_define_class_method(mrb, am, "image_version", version, ARGS_NONE());
-  mrb_define_class_method(mrb, am, "shutdown_image_addon", shutdown_addon, ARGS_NONE());
   mrb_define_class_method(mrb, am, "init_image_addon", init, ARGS_NONE());
+  mrb_define_class_method(mrb, am, "shutdown_image_addon", shutdown_addon, ARGS_NONE());
+  mrb_define_class_method(mrb, am, "image_version", version, ARGS_NONE());
 }
