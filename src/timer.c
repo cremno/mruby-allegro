@@ -111,7 +111,7 @@ mruby_allegro_timer_init(mrb_state *mrb)
   mrb_define_method(mrb, tc, "initialize", initialize, ARGS_REQ(1));
   mrb_define_method(mrb, tc, "start", start, ARGS_NONE());
   mrb_define_method(mrb, tc, "stop", stop, ARGS_NONE());
-  mrb_define_method(mrb, tc, "started?", start, ARGS_NONE());
+  mrb_define_method(mrb, tc, "started?", started, ARGS_NONE());
   mrb_define_method(mrb, tc, "destroy", destroy, ARGS_NONE());
   mrb_define_method(mrb, tc, "destroyed?", destroyed, ARGS_NONE());
   mrb_define_method(mrb, tc, "speed", speed_getter, ARGS_NONE());
