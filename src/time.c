@@ -20,7 +20,7 @@ current_time(mrb_state *mrb, mrb_value self)
 void
 mruby_allegro_time_init(mrb_state *mrb)
 {
-  struct RClass *am = ALLEGRO_MODULE;
+  struct RClass *am = M_ALLEGRO;
   mrb_define_module_function(mrb, am, "rest", rest, ARGS_REQ(1));
   mrb_define_module_function(mrb, am, "time", current_time, ARGS_NONE());
   mrb_define_module_function(mrb, am, "current_time", current_time, ARGS_NONE());

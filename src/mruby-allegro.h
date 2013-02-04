@@ -5,14 +5,15 @@
 #define mrb_bool_value(val) ((val) ? mrb_true_value() : mrb_false_value())
 #endif
 
-#define ALLEGRO_MODULE (mrb_class_obj_get(mrb, "Al"))
 #define M_ALLEGRO (mrb_class_obj_get(mrb, "Al"))
 #define E_ALLEGRO_ERROR (mrb_class_obj_get(mrb, "AllegroError"))
-#define C_BITMAP (get_allegro_const(mrb, "Bitmap", 6))
-#define C_COLOR (get_allegro_const(mrb, "Color", 5))
-#define C_DISPLAY (get_allegro_const(mrb, "Display", 7))
+#define C_ALLEGRO_BITMAP (get_allegro_const(mrb, "Bitmap", 6))
+#define C_ALLEGRO_COLOR (get_allegro_const(mrb, "Color", 5))
+#define C_ALLEGRO_DISPLAY (get_allegro_const(mrb, "Display", 7))
 #define C_ALLEGRO_EVENT (get_allegro_const(mrb, "Event", 5))
 #define C_ALLEGRO_EVENTSOURCE (get_allegro_const(mrb, "EventSource", 11))
+#define C_ALLEGRO_EVENTQUEUE (get_allegro_const(mrb, "EventQueue", 10))
+#define C_ALLEGRO_FONT (get_allegro_const(mrb, "Font", 4))
 
 #define Check_Destroyed(mrb, obj, t, sval) do {\
   Data_Get_Struct(mrb, obj, & t ## _data_type, sval);\
@@ -23,6 +24,7 @@
 
 #define Destroyed(o) (mrb_bool_value(!DATA_PTR(o)))
 
+extern struct mrb_data_type bitmap_data_type;
 extern struct mrb_data_type color_data_type;
 extern struct mrb_data_type display_data_type;
 extern struct mrb_data_type event_data_type;

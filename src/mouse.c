@@ -107,7 +107,7 @@ mruby_allegro_mouse_init(mrb_state *mrb)
 {
   struct RClass *am = M_ALLEGRO;
   struct RClass *mm = mrb_define_module_under(mrb, am, "Mouse");
-  struct RClass *dc = C_DISPLAY;
+  struct RClass *dc = C_ALLEGRO_DISPLAY;
   mrb_define_class_method(mrb, mm, "install", install, ARGS_NONE());
   mrb_define_class_method(mrb, mm, "installed?", installed, ARGS_NONE());
   mrb_define_class_method(mrb, mm, "uninstall", uninstall, ARGS_NONE());

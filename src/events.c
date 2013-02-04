@@ -107,11 +107,11 @@ static mrb_value
 eventqueue_initialize(mrb_state *mrb, mrb_value self)
 {
   ALLEGRO_EVENT_QUEUE *eq;
-  DATA_TYPE(self) = &eventqueue_data_type;
   eq = al_create_event_queue();
   if (!eq) {
-    mrb_raise(mrb, E_ALLEGRO_ERROR, "failed to create event queue");
+    mrb_raise(mrb, E_ALLEGRO_ERROR, "could not create event queue");
   }
+  DATA_TYPE(self) = &eventqueue_data_type;
   DATA_PTR(self) = eq;
   return self;
 }
@@ -168,6 +168,37 @@ eventqueue_empty(mrb_state *mrb, mrb_value self)
 }
 
 static mrb_value
+eventqueue_next_event(mrb_state *mrb, mrb_value self)
+{
+  ALLEGRO_EVENT_QUEUE *eq;
+  ALLEGRO_EVENT *e;
+  Check_Destroyed(mrb, self, eventqueue, eq);
+  e = safe_malloc(mrb, sizeof(*e));
+  if (al_get_next_event(eq, e)) {
+    return mrb_obj_value(Data_Wrap_Struct(mrb, C_ALLEGRO_EVENT, &event_data_type, e));
+  } else {
+    return mrb_nil_value();
+  }
+}
+
+static mrb_value
+eventqueue_drop_next_event(mrb_state *mrb, mrb_value self)
+{
+  ALLEGRO_EVENT_QUEUE *eq;
+  Check_Destroyed(mrb, self, eventqueue, eq);
+  return mrb_bool_value(al_drop_next_event(eq));
+}
+
+static mrb_value
+eventqueue_flush(mrb_state *mrb, mrb_value self)
+{
+  ALLEGRO_EVENT_QUEUE *eq;
+  Check_Destroyed(mrb, self, eventqueue, eq);
+  al_flush_event_queue(eq);
+  return mrb_nil_value();
+}
+
+static mrb_value
 eventqueue_wait_for_event(mrb_state *mrb, mrb_value self)
 {
   ALLEGRO_EVENT_QUEUE *eq;
@@ -181,7 +212,7 @@ eventqueue_wait_for_event(mrb_state *mrb, mrb_value self)
 void
 mruby_allegro_events_init(mrb_state *mrb)
 {
-  struct RClass *am = ALLEGRO_MODULE;
+  struct RClass *am = M_ALLEGRO;
   struct RClass *ec = mrb_define_class_under(mrb, am, "Event", mrb->object_class);
   struct RClass *esc = mrb_define_class_under(mrb, am, "EventSource", mrb->object_class);
   struct RClass *eqc = mrb_define_class_under(mrb, am, "EventQueue", mrb->object_class);
@@ -208,5 +239,8 @@ mruby_allegro_events_init(mrb_state *mrb)
   mrb_define_method(mrb, eqc, "register", eventqueue_register, ARGS_REQ(1));
   mrb_define_method(mrb, eqc, "unregister", eventqueue_unregister, ARGS_REQ(1));
   mrb_define_method(mrb, eqc, "empty?", eventqueue_empty, ARGS_NONE());
+  mrb_define_method(mrb, eqc, "next_event", eventqueue_next_event, ARGS_NONE());
+  mrb_define_method(mrb, eqc, "drop_next_event", eventqueue_drop_next_event, ARGS_NONE());
+  mrb_define_method(mrb, eqc, "flush", eventqueue_flush, ARGS_NONE());
   mrb_define_method(mrb, eqc, "wait_for_event", eventqueue_wait_for_event, ARGS_NONE());
 }

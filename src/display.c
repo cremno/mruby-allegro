@@ -35,7 +35,7 @@ initialize(mrb_state *mrb, mrb_value self)
   mrb_get_args(mrb, "ii", &w, &h);
   d = al_create_display(clamp_int(w), clamp_int(h));
   if (!d) {
-    mrb_raise(mrb, E_ALLEGRO_ERROR, "failed to initialize display");
+    mrb_raise(mrb, E_ALLEGRO_ERROR, "could not initialize display");
   }
   DATA_PTR(self) = d;
   return self;
@@ -59,6 +59,14 @@ destroyed(mrb_state *mrb, mrb_value self)
 }
 
 static mrb_value
+acknowledge_resize(mrb_state *mrb, mrb_value self)
+{
+  ALLEGRO_DISPLAY *d;
+  Check_Destroyed(mrb, self, display, d);
+  return mrb_bool_value(al_acknowledge_resize(d));
+}
+
+static mrb_value
 window_title_setter(mrb_state *mrb, mrb_value self)
 {
   ALLEGRO_DISPLAY *d;
@@ -78,6 +86,19 @@ resize(mrb_state *mrb, mrb_value self)
   Get_Display(mrb, self, d);
   mrb_get_args(mrb, "ii", &w, &h);
   return mrb_bool_value(al_resize_display(d, clamp_int(w), clamp_int(h)));
+}
+
+static mrb_value
+icon_setter(mrb_state *mrb, mrb_value self)
+{
+  ALLEGRO_DISPLAY *d;
+  mrb_value o;
+  ALLEGRO_BITMAP *b;
+  Check_Destroyed(mrb, self, display, d);
+  mrb_get_args(mrb, "o", &o);
+  Check_Destroyed(mrb, o, bitmap, b);
+  al_set_display_icon(d, b);
+  return mrb_nil_value();
 }
 
 static mrb_value
@@ -158,13 +179,14 @@ event_source(mrb_state *mrb, mrb_value self)
 void
 mruby_allegro_display_init(mrb_state *mrb)
 {
-  struct RClass *am = ALLEGRO_MODULE;
+  struct RClass *am = M_ALLEGRO;
   struct RClass *dc = mrb_define_class_under(mrb, am, "Display", mrb->object_class);
   MRB_SET_INSTANCE_TT(dc, MRB_TT_DATA);
   mrb_define_alias(mrb, dc->c, "create", "new");
   mrb_define_method(mrb, dc, "initialize", initialize, ARGS_REQ(2));
   mrb_define_method(mrb, dc, "destroy", destroy, ARGS_NONE());
   mrb_define_method(mrb, dc, "destroyed?", destroyed, ARGS_NONE());
+  mrb_define_method(mrb, dc, "acknowledge_resize?", acknowledge_resize, ARGS_NONE());
   mrb_define_class_method(mrb, dc, "flip", flip, ARGS_NONE());
   mrb_define_method(mrb, dc, "height", height_getter, ARGS_NONE());
   mrb_define_method(mrb, dc, "width", width_getter, ARGS_NONE());

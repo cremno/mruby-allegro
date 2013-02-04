@@ -1,4 +1,6 @@
+#include <stdio.h>
 #include <mruby.h>
+#include <mruby/array.h>
 #include <mruby/class.h>
 #include <mruby/data.h>
 #include <mruby/hash.h>
@@ -34,19 +36,19 @@ color_initialize(mrb_state *mrb, mrb_value self)
   int argc;
   ALLEGRO_COLOR *oc;
   ALLEGRO_COLOR *c;
-  DATA_TYPE(self) = &color_data_type;
   argc = mrb_get_args(mrb, "|o", &o);
   if (argc) {
     Data_Get_Struct(mrb, o, &color_data_type, oc);
   }
   c = safe_malloc(mrb, sizeof(*c));
   *c = !argc ? black : *oc;
+  DATA_TYPE(self) = &color_data_type;
   DATA_PTR(self) = c;
   return self;
 }
 
 static mrb_value
-color_rgb(mrb_state *mrb, mrb_value self)
+color_map_rgb(mrb_state *mrb, mrb_value self)
 {
   mrb_int r;
   mrb_int g;
@@ -59,7 +61,7 @@ color_rgb(mrb_state *mrb, mrb_value self)
 }
 
 static mrb_value
-color_rgba(mrb_state *mrb, mrb_value self)
+color_map_rgba(mrb_state *mrb, mrb_value self)
 {
   mrb_int r;
   mrb_int g;
@@ -73,7 +75,7 @@ color_rgba(mrb_state *mrb, mrb_value self)
 }
 
 static mrb_value
-color_rgb_f(mrb_state *mrb, mrb_value self)
+color_map_rgb_f(mrb_state *mrb, mrb_value self)
 {
   mrb_float r;
   mrb_float g;
@@ -86,7 +88,7 @@ color_rgb_f(mrb_state *mrb, mrb_value self)
 }
 
 static mrb_value
-color_rgba_f(mrb_state *mrb, mrb_value self)
+color_map_rgba_f(mrb_state *mrb, mrb_value self)
 {
   mrb_float r;
   mrb_float g;
@@ -97,6 +99,125 @@ color_rgba_f(mrb_state *mrb, mrb_value self)
   c = safe_malloc(mrb, sizeof(*c));
   *c = al_map_rgba_f(clamp_f(r), clamp_f(g), clamp_f(b), clamp_f(a));
   return mrb_obj_value(Data_Wrap_Struct(mrb, mrb_class_ptr(self), &color_data_type, c));
+}
+
+static mrb_value
+color_unmap_rgb(mrb_state *mrb, mrb_value self)
+{
+  ALLEGRO_COLOR *c;
+  unsigned char r;
+  unsigned char g;
+  unsigned char b;
+  mrb_value ary;
+  Data_Get_Struct(mrb, self, &color_data_type, c);
+  al_unmap_rgb(*c, &r, &g, &b);
+  ary = mrb_ary_new_capa(mrb, 3);
+  mrb_ary_push(mrb, ary, mrb_fixnum_value(r));
+  mrb_ary_push(mrb, ary, mrb_fixnum_value(g));
+  mrb_ary_push(mrb, ary, mrb_fixnum_value(b));
+  return ary;
+}
+
+static mrb_value
+color_unmap_rgb_f(mrb_state *mrb, mrb_value self)
+{
+  ALLEGRO_COLOR *c;
+  float r;
+  float g;
+  float b;
+  mrb_value ary;
+  Data_Get_Struct(mrb, self, &color_data_type, c);
+  al_unmap_rgb_f(*c, &r, &g, &b);
+  ary = mrb_ary_new_capa(mrb, 3);
+  mrb_ary_push(mrb, ary, mrb_float_value(r));
+  mrb_ary_push(mrb, ary, mrb_float_value(g));
+  mrb_ary_push(mrb, ary, mrb_float_value(b));
+  return ary;
+}
+
+static mrb_value
+color_unmap_rgba(mrb_state *mrb, mrb_value self)
+{
+  ALLEGRO_COLOR *c;
+  unsigned char r;
+  unsigned char g;
+  unsigned char b;
+  unsigned char a;
+  mrb_value ary;
+  Data_Get_Struct(mrb, self, &color_data_type, c);
+  al_unmap_rgba(*c, &r, &g, &b, &a);
+  ary = mrb_ary_new_capa(mrb, 4);
+  mrb_ary_push(mrb, ary, mrb_fixnum_value(r));
+  mrb_ary_push(mrb, ary, mrb_fixnum_value(g));
+  mrb_ary_push(mrb, ary, mrb_fixnum_value(b));
+  mrb_ary_push(mrb, ary, mrb_fixnum_value(a));
+  return ary;
+}
+
+static mrb_value
+color_unmap_rgba_f(mrb_state *mrb, mrb_value self)
+{
+  ALLEGRO_COLOR *c;
+  float r;
+  float g;
+  float b;
+  float a;
+  mrb_value ary;
+  Data_Get_Struct(mrb, self, &color_data_type, c);
+  al_unmap_rgba_f(*c, &r, &g, &b, &a);
+  ary = mrb_ary_new_capa(mrb, 4);
+  mrb_ary_push(mrb, ary, mrb_float_value(r));
+  mrb_ary_push(mrb, ary, mrb_float_value(g));
+  mrb_ary_push(mrb, ary, mrb_float_value(b));
+  mrb_ary_push(mrb, ary, mrb_float_value(a));
+  return ary;
+}
+
+static mrb_value
+color_inspect(mrb_state *mrb, mrb_value self)
+{
+  char buf[128];
+  ALLEGRO_COLOR *c;
+  const char *s;
+  int len;
+  Data_Get_Struct(mrb, self, &color_data_type, c);
+  s = mrb_obj_classname(mrb, self);
+  len = snprintf(buf, sizeof(buf), "#<%s: r=%f, g=%f, b=%f, a=%f>", s, c->r, c->g, c->b, c->a);
+  return mrb_str_new(mrb, buf, len);
+}
+
+#define ATTR(attr) static mrb_value \
+color_ ## attr ## _getter(mrb_state *mrb, mrb_value self)\
+{\
+  ALLEGRO_COLOR *c;\
+  Data_Get_Struct(mrb, self, &color_data_type, c);\
+  return mrb_float_value(c->attr);\
+}\
+static mrb_value \
+color_ ## attr ## _setter(mrb_state *mrb, mrb_value self)\
+{\
+  ALLEGRO_COLOR *c;\
+  mrb_float f;\
+  Data_Get_Struct(mrb, self, &color_data_type, c);\
+  mrb_get_args(mrb, "f", &f);\
+  c->attr = clamp_f(f);\
+  return mrb_float_value(f);\
+}
+
+ATTR(r)
+ATTR(g)
+ATTR(b)
+ATTR(a)
+
+#undef ATTR
+
+static mrb_value
+bitmap_unlock(mrb_state *mrb, mrb_value self)
+{
+  ALLEGRO_BITMAP *b;
+  Check_Destroyed(mrb, self, bitmap, b);
+  al_unlock_bitmap(b);
+  return mrb_nil_value();
 }
 
 static mrb_value
@@ -157,7 +278,7 @@ bitmap_get_pixel(mrb_state *mrb, mrb_value self)
   mrb_get_args(mrb, "ii", &x, &y);
   c = safe_malloc(mrb, sizeof(*c));
   *c = al_get_pixel(b, clamp_int(x), clamp_int(y));
-  return mrb_obj_value(Data_Wrap_Struct(mrb, C_COLOR, &color_data_type, c));
+  return mrb_obj_value(Data_Wrap_Struct(mrb, C_ALLEGRO_COLOR, &color_data_type, c));
 }
 
 static mrb_value
@@ -484,13 +605,16 @@ target_setter(mrb_state *mrb, mrb_value self)
 {
   mrb_value o;
   mrb_get_args(mrb, "o", &o);
-  // TODO: should destroyed objects (DATA_PTR(o) == NULL) may be set as target?
   if (DATA_TYPE(o) == &bitmap_data_type) {
-    al_set_target_bitmap(DATA_PTR(o));
+    ALLEGRO_BITMAP *b;
+    Check_Destroyed(mrb, o, bitmap, b);
+    al_set_target_bitmap(b);
   } else if (DATA_TYPE(o) == &display_data_type) {
-    al_set_target_backbuffer(DATA_PTR(o));
+    ALLEGRO_DISPLAY *d;
+    Check_Destroyed(mrb, o, display, d);
+    al_set_target_backbuffer(d);
   } else {
-    mrb_raise(mrb, E_TYPE_ERROR, "expected Al::Bitmap or Al::Display");
+    mrb_raisef(mrb, E_TYPE_ERROR, "expected %s or %s", bitmap_data_type.struct_name, display_data_type.struct_name);
   }
   return o;
 }
@@ -552,16 +676,30 @@ bitmap_save(mrb_state *mrb, mrb_value self)
 void
 mruby_allegro_graphics_init(mrb_state *mrb)
 {
-  struct RClass *am = ALLEGRO_MODULE;
+  struct RClass *am = M_ALLEGRO;
   struct RClass *cc = mrb_define_class_under(mrb, am, "Color", mrb->object_class);
   struct RClass *bc = mrb_define_class_under(mrb, am, "Bitmap", mrb->object_class);
   MRB_SET_INSTANCE_TT(cc, MRB_TT_DATA);
   MRB_SET_INSTANCE_TT(bc, MRB_TT_DATA);
   mrb_define_method(mrb, cc, "initialize", color_initialize, ARGS_OPT(1));
-  mrb_define_class_method(mrb, cc, "rgb", color_rgb, ARGS_REQ(3));
-  mrb_define_class_method(mrb, cc, "rgba", color_rgba, ARGS_REQ(4));
-  mrb_define_class_method(mrb, cc, "rgb_f", color_rgb_f, ARGS_REQ(3));
-  mrb_define_class_method(mrb, cc, "rgba_f", color_rgba_f, ARGS_REQ(4));
+  mrb_define_class_method(mrb, cc, "rgb", color_map_rgb, ARGS_REQ(3));
+  mrb_define_class_method(mrb, cc, "rgba", color_map_rgba, ARGS_REQ(4));
+  mrb_define_class_method(mrb, cc, "rgb_f", color_map_rgb_f, ARGS_REQ(3));
+  mrb_define_class_method(mrb, cc, "rgba_f", color_map_rgba_f, ARGS_REQ(4));
+  mrb_define_method(mrb, cc, "rgb", color_unmap_rgb, ARGS_NONE());
+  mrb_define_method(mrb, cc, "rgb_f", color_unmap_rgb_f, ARGS_NONE());
+  mrb_define_method(mrb, cc, "rgba", color_unmap_rgba, ARGS_NONE());
+  mrb_define_method(mrb, cc, "rgba_f", color_unmap_rgba_f, ARGS_NONE());
+  mrb_define_method(mrb, cc, "inspect", color_inspect, ARGS_NONE());
+  mrb_define_method(mrb, cc, "r", color_r_getter, ARGS_NONE());
+  mrb_define_method(mrb, cc, "g", color_g_getter, ARGS_NONE());
+  mrb_define_method(mrb, cc, "b", color_b_getter, ARGS_NONE());
+  mrb_define_method(mrb, cc, "a", color_a_getter, ARGS_NONE());
+  mrb_define_method(mrb, cc, "r=", color_r_setter, ARGS_REQ(1));
+  mrb_define_method(mrb, cc, "g=", color_g_setter, ARGS_REQ(1));
+  mrb_define_method(mrb, cc, "b=", color_b_setter, ARGS_REQ(1));
+  mrb_define_method(mrb, cc, "a=", color_a_setter, ARGS_REQ(1));
+  mrb_define_method(mrb, bc, "unlock", bitmap_unlock, ARGS_NONE());
   mrb_undef_class_method(mrb, bc, "new");  // TODO: combine ::create and ::load, RGSS-like?
   mrb_define_class_method(mrb, bc, "create", bitmap_create, ARGS_REQ(2));
   mrb_define_method(mrb, bc, "destroy", bitmap_destroy, ARGS_NONE());

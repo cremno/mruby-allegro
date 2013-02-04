@@ -36,7 +36,7 @@ event_source(mrb_state *mrb, mrb_value self)
 void
 mruby_allegro_keyboard_init(mrb_state *mrb)
 {
-  struct RClass *am = ALLEGRO_MODULE;
+  struct RClass *am = M_ALLEGRO;
   struct RClass *km = mrb_define_module_under(mrb, am, "Keyboard");
   mrb_define_class_method(mrb, km, "install", install, ARGS_NONE());
   mrb_define_class_method(mrb, km, "installed?", installed, ARGS_NONE());

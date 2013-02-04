@@ -5,6 +5,7 @@
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_ttf.h>
 #include <allegro5/allegro_image.h>
+#include <allegro5/allegro_native_dialog.h>
 #include <allegro5/allegro_primitives.h>
 
 static void
@@ -27,6 +28,7 @@ mrb_mruby_allegro_gem_init(mrb_state* mrb)
   extern void mruby_allegro_timer_init(mrb_state *);
   extern void mruby_allegro_font_init(mrb_state *);
   extern void mruby_allegro_image_init(mrb_state *);
+  extern void mruby_allegro_dialog_init(mrb_state *);
   extern void mruby_allegro_primitives_init(mrb_state *);
   extern void consts_init(mrb_state *);
   int ai = mrb_gc_arena_save(mrb);
@@ -43,6 +45,7 @@ mrb_mruby_allegro_gem_init(mrb_state* mrb)
   mruby_allegro_timer_init(mrb); mrb_gc_arena_restore(mrb, ai);
   mruby_allegro_font_init(mrb); mrb_gc_arena_restore(mrb, ai);
   mruby_allegro_image_init(mrb); mrb_gc_arena_restore(mrb, ai);
+  mruby_allegro_dialog_init(mrb); mrb_gc_arena_restore(mrb, ai);
   mruby_allegro_primitives_init(mrb); mrb_gc_arena_restore(mrb, ai);
   consts_init(mrb); mrb_gc_arena_restore(mrb, ai);
 #ifdef INIT_AT_START

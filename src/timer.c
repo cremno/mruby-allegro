@@ -19,12 +19,12 @@ initialize(mrb_state *mrb, mrb_value self)
 {
   mrb_float speed_secs;
   ALLEGRO_TIMER *t;
-  DATA_TYPE(self) = &timer_data_type;
   mrb_get_args(mrb, "f", &speed_secs);
   t = al_create_timer(speed_secs);
   if (!t) {
     mrb_raise(mrb, E_ALLEGRO_ERROR, "failed to initialize timer");
   }
+  DATA_TYPE(self) = &timer_data_type;
   DATA_PTR(self) = t;
   return self;
 }

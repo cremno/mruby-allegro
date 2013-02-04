@@ -71,7 +71,7 @@ org_name_getter(mrb_state *mrb, mrb_value self)
 void
 mruby_allegro_system_init(mrb_state *mrb)
 {
-  struct RClass *am = ALLEGRO_MODULE;
+  struct RClass *am = M_ALLEGRO;
   mrb_define_class_method(mrb, am, "allegro_version", version, ARGS_NONE());
   mrb_define_class_method(mrb, am, "init", install, ARGS_NONE());
   mrb_define_class_method(mrb, am, "install", install, ARGS_NONE());
