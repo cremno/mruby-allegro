@@ -605,6 +605,9 @@ target_setter(mrb_state *mrb, mrb_value self)
 {
   mrb_value o;
   mrb_get_args(mrb, "o", &o);
+  if (mrb_type(o) != MRB_TT_DATA) {
+    goto type_error;
+  }
   if (DATA_TYPE(o) == &bitmap_data_type) {
     ALLEGRO_BITMAP *b;
     Check_Destroyed(mrb, o, bitmap, b);
@@ -614,6 +617,7 @@ target_setter(mrb_state *mrb, mrb_value self)
     Check_Destroyed(mrb, o, display, d);
     al_set_target_backbuffer(d);
   } else {
+type_error:
     mrb_raisef(mrb, E_TYPE_ERROR, "expected %s or %s", bitmap_data_type.struct_name, display_data_type.struct_name);
   }
   return o;
@@ -700,7 +704,7 @@ mruby_allegro_graphics_init(mrb_state *mrb)
   mrb_define_method(mrb, cc, "b=", color_b_setter, ARGS_REQ(1));
   mrb_define_method(mrb, cc, "a=", color_a_setter, ARGS_REQ(1));
   mrb_define_method(mrb, bc, "unlock", bitmap_unlock, ARGS_NONE());
-  mrb_undef_class_method(mrb, bc, "new");  // TODO: combine ::create and ::load, RGSS-like?
+  mrb_undef_class_method(mrb, bc, "new");
   mrb_define_class_method(mrb, bc, "create", bitmap_create, ARGS_REQ(2));
   mrb_define_method(mrb, bc, "destroy", bitmap_destroy, ARGS_NONE());
   mrb_define_method(mrb, bc, "destroyed?", bitmap_destroyed, ARGS_NONE());
