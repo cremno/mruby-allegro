@@ -7,6 +7,9 @@ MRuby::Gem::Specification.new('mruby-allegro') do |spec|
     spec.linker.libraries << 'allegro-5.0.8-monolith-static-mt'
     spec.linker.libraries << 'freetype-2.4.8-static-mt'
     spec.linker.libraries << %w(uuid gdiplus psapi shlwapi comdlg32 user32 ole32 gdi32 opengl32 glu32 shell32 winmm)
+    if spec.cc.command.start_with? 'gcc'  # MinGW
+      spec.linker.libraries << 'stdc++'
+    end
   else
     spec.cc.include_paths << '/usr/local/include'
     spec.linker.library_paths << '/usr/local/lib'
