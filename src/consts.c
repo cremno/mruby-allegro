@@ -26,6 +26,7 @@ consts_init(mrb_state *mrb)
   mrb_define_global_const(mrb, "ALLEGRO_EVENT_DISPLAY_SWITCH_IN", mrb_fixnum_value(ALLEGRO_EVENT_DISPLAY_SWITCH_IN));
   mrb_define_global_const(mrb, "ALLEGRO_EVENT_DISPLAY_SWITCH_OUT", mrb_fixnum_value(ALLEGRO_EVENT_DISPLAY_SWITCH_OUT));
   mrb_define_global_const(mrb, "ALLEGRO_EVENT_DISPLAY_ORIENTATION", mrb_fixnum_value(ALLEGRO_EVENT_DISPLAY_ORIENTATION));
+
   mrb_define_global_const(mrb, "ALLEGRO_KEY_A", mrb_fixnum_value(ALLEGRO_KEY_A));
   mrb_define_global_const(mrb, "ALLEGRO_KEY_B", mrb_fixnum_value(ALLEGRO_KEY_B));
   mrb_define_global_const(mrb, "ALLEGRO_KEY_C", mrb_fixnum_value(ALLEGRO_KEY_C));
@@ -162,4 +163,18 @@ consts_init(mrb_state *mrb)
   mrb_define_global_const(mrb, "ALLEGRO_KEYMOD_ACCENT2", mrb_fixnum_value(ALLEGRO_KEYMOD_ACCENT2));
   mrb_define_global_const(mrb, "ALLEGRO_KEYMOD_ACCENT3", mrb_fixnum_value(ALLEGRO_KEYMOD_ACCENT3));
   mrb_define_global_const(mrb, "ALLEGRO_KEYMOD_ACCENT4", mrb_fixnum_value(ALLEGRO_KEYMOD_ACCENT4));
+
+  mrb_define_global_const(mrb, "ALLEGRO_LOCK_READWRITE", mrb_fixnum_value(ALLEGRO_LOCK_READWRITE));
+  mrb_define_global_const(mrb, "ALLEGRO_LOCK_READONLY", mrb_fixnum_value(ALLEGRO_LOCK_READONLY));
+  mrb_define_global_const(mrb, "ALLEGRO_LOCK_WRITEONLY", mrb_fixnum_value(ALLEGRO_LOCK_WRITEONLY));
+
+  mrb_define_global_const(mrb, "ALLEGRO_ZERO", mrb_fixnum_value(ALLEGRO_ZERO));
+  mrb_define_global_const(mrb, "ALLEGRO_ONE", mrb_fixnum_value(ALLEGRO_ONE));
+  mrb_define_global_const(mrb, "ALLEGRO_ALPHA", mrb_fixnum_value(ALLEGRO_ALPHA));
+  mrb_define_global_const(mrb, "ALLEGRO_INVERSE_ALPHA", mrb_fixnum_value(ALLEGRO_INVERSE_ALPHA));
+
+  mrb_define_global_const(mrb, "ALLEGRO_ADD", mrb_fixnum_value(ALLEGRO_ADD));
+  mrb_define_global_const(mrb, "ALLEGRO_SRC_MINUS_DEST", mrb_fixnum_value(ALLEGRO_SRC_MINUS_DEST));
+  mrb_define_global_const(mrb, "ALLEGRO_SRC_MINUS_DEST", mrb_fixnum_value(ALLEGRO_DEST_MINUS_SRC));
+  mrb_define_global_const(mrb, "ALLEGRO_NUM_BLEND_OPERATIONS", mrb_fixnum_value(ALLEGRO_NUM_BLEND_OPERATIONS));
 }

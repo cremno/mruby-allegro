@@ -624,6 +624,93 @@ type_error:
 }
 
 static mrb_value
+display_current(mrb_state *mrb, mrb_value self)
+{
+  ALLEGRO_DISPLAY *d;
+  d = al_get_current_display();
+  // if (!d) {
+  //   mrb_raise(E_ALLEGRO_ERROR, "none current display for the calling thread");
+  // }
+  return mrb_obj_value(Data_Wrap_Struct(mrb, C_ALLEGRO_DISPLAY, &display_data_type, d));
+}
+
+static mrb_value
+blender_getter(mrb_state *mrb, mrb_value self)
+{
+  int op;
+  int src;
+  int dst;
+  mrb_value a;
+  al_get_blender(&op, &src, &dst);
+  a = mrb_ary_new_capa(mrb, 3);
+  mrb_ary_push(mrb, a, mrb_fixnum_value(op));
+  mrb_ary_push(mrb, a, mrb_fixnum_value(src));
+  mrb_ary_push(mrb, a, mrb_fixnum_value(dst));
+  return a;
+}
+
+static mrb_value
+separate_blender_getter(mrb_state *mrb, mrb_value self)
+{
+  int op;
+  int src;
+  int dst;
+  int alpha_op;
+  int alpha_src;
+  int alpha_dst;
+  mrb_value a;
+  al_get_separate_blender(&op, &src, &dst, &alpha_op, &alpha_src, &alpha_dst);
+  a = mrb_ary_new_capa(mrb, 6);
+  mrb_ary_push(mrb, a, mrb_fixnum_value(op));
+  mrb_ary_push(mrb, a, mrb_fixnum_value(src));
+  mrb_ary_push(mrb, a, mrb_fixnum_value(dst));
+  mrb_ary_push(mrb, a, mrb_fixnum_value(alpha_op));
+  mrb_ary_push(mrb, a, mrb_fixnum_value(alpha_src));
+  mrb_ary_push(mrb, a, mrb_fixnum_value(alpha_dst));
+  return a;
+}
+
+static mrb_value
+blender_setter(mrb_state *mrb, mrb_value self)
+{
+  mrb_value a;
+  mrb_value *e;
+  mrb_get_args(mrb, "A", &a);
+  if (RARRAY_LEN(a) != 3) {
+    goto invalid;
+  }
+  e = RARRAY_PTR(a);
+  if (mrb_fixnum_p(e[0]) && mrb_fixnum_p(e[1]) && mrb_fixnum_p(e[2])) {
+    al_set_blender(mrb_fixnum(e[0]), mrb_fixnum(e[1]), mrb_fixnum(e[2]));
+    return a;
+  }
+invalid:
+  mrb_raise(mrb, E_ALLEGRO_ERROR, "invalid blending mode");
+  return mrb_nil_value();  // unreachable
+}
+
+static mrb_value
+separate_blender_setter(mrb_state *mrb, mrb_value self)
+{
+  mrb_value a;
+  mrb_value *e;
+  mrb_get_args(mrb, "A", &a);
+  if (RARRAY_LEN(a) != 6) {
+    goto invalid;
+  }
+  e = RARRAY_PTR(a);
+  if (mrb_fixnum_p(e[0]) && mrb_fixnum_p(e[1]) && mrb_fixnum_p(e[2]) &&
+      mrb_fixnum_p(e[3]) && mrb_fixnum_p(e[4]) && mrb_fixnum_p(e[5])) {
+    al_set_separate_blender(mrb_fixnum(e[0]), mrb_fixnum(e[1]), mrb_fixnum(e[2]),
+      mrb_fixnum(e[3]), mrb_fixnum(e[4]), mrb_fixnum(e[5]));
+    return a;
+  }
+invalid:
+  mrb_raise(mrb, E_ALLEGRO_ERROR, "invalid blending mode");
+  return mrb_nil_value();  // unreachable
+}
+
+static mrb_value
 convert_mask_to_alpha(mrb_state *mrb, mrb_value self)
 {
   ALLEGRO_BITMAP *b;
@@ -729,6 +816,11 @@ mruby_allegro_graphics_init(mrb_state *mrb)
   mrb_define_class_method(mrb, am, "put_pixel", put_pixel, ARGS_REQ(3));
   mrb_define_class_method(mrb, am, "put_blended_pixel", put_blended_pixel, ARGS_REQ(3));
   mrb_define_class_method(mrb, am, "target=", target_setter, ARGS_REQ(1));
+  mrb_define_class_method(mrb, C_ALLEGRO_DISPLAY, "current", display_current, ARGS_NONE());
+  mrb_define_class_method(mrb, am, "blender", blender_getter, ARGS_NONE());
+  mrb_define_class_method(mrb, am, "separate_blender", separate_blender_getter, ARGS_NONE());
+  mrb_define_class_method(mrb, am, "blender=", blender_setter, ARGS_REQ(1));
+  mrb_define_class_method(mrb, am, "separate_blender=", separate_blender_setter, ARGS_REQ(1));
   mrb_define_method(mrb, bc, "convert_mask_to_alpha", convert_mask_to_alpha, ARGS_REQ(1));
   mrb_define_class_method(mrb, am, "hold_drawing", hold_drawing, ARGS_REQ(1));
   mrb_define_class_method(mrb, am, "drawing_held?", drawing_held, ARGS_NONE());
