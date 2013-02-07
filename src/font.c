@@ -92,27 +92,27 @@ descent(mrb_state *mrb, mrb_value self)
 static mrb_value
 text_width(mrb_state *mrb, mrb_value self)
 {
+  mrb_value o;
   ALLEGRO_FONT *f;
-  char *s;
-  Check_Destroyed(mrb, self, font, f);
-  mrb_get_args(mrb, "z", &s);
-  return mrb_fixnum_value(al_get_text_width(f, s));
+  mrb_get_args(mrb, "o", &o);
+  Check_Destroyed(mrb, o, font, f);
+  return mrb_fixnum_value(al_get_text_width(f, RSTRING_PTR(self)));
 }
 
 static mrb_value
 draw_text(mrb_state *mrb, mrb_value self)
 {
-  ALLEGRO_FONT *f;
-  mrb_value o;
+  mrb_value of;
+  mrb_value oc;
   mrb_float x;
   mrb_float y;
   char *s;
   mrb_sym alignment;
   mrb_sym integer;
+  ALLEGRO_FONT *f;
   ALLEGRO_COLOR *c;
   int flags = 0;
-  Check_Destroyed(mrb, self, font, f);
-  switch (mrb_get_args(mrb, "offz|nn", &o, &x, &y, &s, &alignment, &integer)) {
+  switch (mrb_get_args(mrb, "ooffz|nn", &of, &oc, &x, &y, &s, &alignment, &integer)) {
   case 6:
     if (integer == mrb_intern2(mrb, "integer", 7)) {
       flags |= ALLEGRO_ALIGN_INTEGER;
@@ -130,7 +130,8 @@ draw_text(mrb_state *mrb, mrb_value self)
   default:
     break;
   }
-  Data_Get_Struct(mrb, o, &color_data_type, c);
+  Check_Destroyed(mrb, of, font, f);
+  Data_Get_Struct(mrb, oc, &color_data_type, c);
   al_draw_text(f, *c, x, y, flags, s);
   return mrb_nil_value();
 }
@@ -138,23 +139,24 @@ draw_text(mrb_state *mrb, mrb_value self)
 static mrb_value
 draw_justified_text(mrb_state *mrb, mrb_value self)
 {
-  ALLEGRO_FONT *f;
-  mrb_value o;
+  mrb_value of;
+  mrb_value oc;
   mrb_float x1;
   mrb_float x2;
   mrb_float y;
   mrb_float diff;
   char *s;
   mrb_sym integer;
+  ALLEGRO_FONT *f;
   ALLEGRO_COLOR *c;
   int flags = 0;
-  Check_Destroyed(mrb, self, font, f);
-  if (mrb_get_args(mrb, "offffz|n", &o, &x1, &x2, &y, &diff, &s, &integer) == 7) {
+  if (mrb_get_args(mrb, "ooffffz|n", &of, &oc, &x1, &x2, &y, &diff, &s, &integer) == 7) {
     if (integer == mrb_intern2(mrb, "integer", 7)) {
       flags |= ALLEGRO_ALIGN_INTEGER;
     }
   }
-  Data_Get_Struct(mrb, o, &color_data_type, c);
+  Check_Destroyed(mrb, of, font, f);
+  Data_Get_Struct(mrb, oc, &color_data_type, c);
   al_draw_justified_text(f, *c, x1, x2, y, diff, flags, s);
   return mrb_nil_value();
 }
@@ -213,6 +215,7 @@ mruby_allegro_font_init(mrb_state *mrb)
 {
   struct RClass *am = M_ALLEGRO;
   struct RClass *fc = mrb_define_class_under(mrb, am, "Font", mrb->object_class);
+  struct RClass *sc = mrb_class_obj_get(mrb, "String");
   MRB_SET_INSTANCE_TT(fc, MRB_TT_DATA);
   mrb_define_module_function(mrb, am, "init_font_addon", font_addon_version, ARGS_NONE());
   mrb_define_module_function(mrb, am, "shutdown_font_addon", font_addon_version, ARGS_NONE());
@@ -223,9 +226,9 @@ mruby_allegro_font_init(mrb_state *mrb)
   mrb_define_method(mrb, fc, "line_height", line_height, ARGS_NONE());
   mrb_define_method(mrb, fc, "ascent", ascent, ARGS_NONE());
   mrb_define_method(mrb, fc, "descent", descent, ARGS_NONE());
-  mrb_define_method(mrb, fc, "text_width", text_width, ARGS_REQ(1));
-  mrb_define_method(mrb, am, "draw_text", draw_text, ARGS_REQ(4) | ARGS_OPT(2));
-  mrb_define_method(mrb, am, "draw_justified_text", draw_justified_text, ARGS_REQ(6) | ARGS_OPT(1));
+  mrb_define_method(mrb, sc, "text_width", text_width, ARGS_REQ(1));
+  mrb_define_module_function(mrb, am, "draw_text", draw_text, ARGS_REQ(5) | ARGS_OPT(2));
+  mrb_define_module_function(mrb, am, "draw_justified_text", draw_justified_text, ARGS_REQ(7) | ARGS_OPT(1));
   mrb_define_module_function(mrb, am, "font_addon_version", font_addon_version, ARGS_NONE());
   mrb_define_class_method(mrb, fc, "load_bitmap_font", load_bitmap, ARGS_REQ(1));
   mrb_define_class_method(mrb, fc, "create_builtin_font", create_builtin, ARGS_NONE());
