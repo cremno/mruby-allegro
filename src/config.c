@@ -183,5 +183,5 @@ mruby_allegro_config_init(mrb_state *mrb)
   mrb_define_method(mrb, cc, "set_value", config_set_value, ARGS_REQ(3));
   mrb_define_method(mrb, cc, "merge", config_merge, ARGS_REQ(1));
   mrb_define_method(mrb, cc, "merge_into", config_merge_into, ARGS_REQ(1));
-  mrb_define_alias(mrb, cc, "merge_into", "merge!");
+  mrb_define_alias(mrb, cc, "merge!", "merge_into");
 }
