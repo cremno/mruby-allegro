@@ -19,13 +19,6 @@ display_free(mrb_state *mrb, void *p)
 struct mrb_data_type display_data_type = { "allegro/display", display_free };
 
 static mrb_value
-flip(mrb_state *mrb, mrb_value self)
-{
-  al_flip_display();
-  return mrb_nil_value();
-}
-
-static mrb_value
 initialize(mrb_state *mrb, mrb_value self)
 {
   mrb_int w;
@@ -56,6 +49,51 @@ static mrb_value
 destroyed(mrb_state *mrb, mrb_value self)
 {
   return Destroyed(self);
+}
+
+static mrb_value
+event_source(mrb_state *mrb, mrb_value self)
+{
+  ALLEGRO_DISPLAY *d;
+  ALLEGRO_EVENT_SOURCE *es;
+  Check_Destroyed(mrb, self, display, d);
+  es = al_get_display_event_source(d);
+  return mrb_obj_value(Data_Wrap_Struct(mrb, C_ALLEGRO_EVENTSOURCE, &eventsource_data_type, es));
+}
+
+static mrb_value
+backbuffer(mrb_state *mrb, mrb_value self)
+{
+  ALLEGRO_DISPLAY *d;
+  ALLEGRO_BITMAP *b;
+  Check_Destroyed(mrb, self, display, d);
+  b = al_get_backbuffer(d);
+  return mrb_obj_value(Data_Wrap_Struct(mrb, C_ALLEGRO_BITMAP, &bitmap_data_type, b));
+}
+
+static mrb_value
+flip(mrb_state *mrb, mrb_value self)
+{
+  al_flip_display();
+  return mrb_nil_value();
+}
+
+static mrb_value
+update_region(mrb_state *mrb, mrb_value self)
+{
+  mrb_int x;
+  mrb_int y;
+  mrb_int width;
+  mrb_int height;
+  mrb_get_args(mrb, "iiii", &x, &y, &width, &height);
+  al_update_display_region(x, y, width, height);
+  return mrb_nil_value();
+}
+
+static mrb_value
+wait_for_vsync(mrb_state *mrb, mrb_value self)
+{
+  return mrb_bool_value(al_wait_for_vsync()); 
 }
 
 static mrb_value
@@ -151,11 +189,6 @@ height_getter(mrb_state *mrb, mrb_value self)
   return mrb_fixnum_value(al_get_display_height(d));
 }
 
-static mrb_value
-wait_for_vsync(mrb_state *mrb, mrb_value self)
-{
-  return mrb_bool_value(al_wait_for_vsync()); 
-}
 
 static mrb_value
 inhibit_screensaver_setter(mrb_state *mrb, mrb_value self)
@@ -164,16 +197,6 @@ inhibit_screensaver_setter(mrb_state *mrb, mrb_value self)
   mrb_get_args(mrb, "b", &b);
   al_inhibit_screensaver(b);
   return mrb_bool_value(b);
-}
-
-static mrb_value
-event_source(mrb_state *mrb, mrb_value self)
-{
-  ALLEGRO_DISPLAY *d;
-  ALLEGRO_EVENT_SOURCE *es;
-  Check_Destroyed(mrb, self, display, d);
-  es = al_get_display_event_source(d);
-  return mrb_obj_value(Data_Wrap_Struct(mrb, C_ALLEGRO_EVENTSOURCE, &eventsource_data_type, es));
 }
 
 void
@@ -186,15 +209,17 @@ mruby_allegro_display_init(mrb_state *mrb)
   mrb_define_method(mrb, dc, "initialize", initialize, ARGS_REQ(2));
   mrb_define_method(mrb, dc, "destroy", destroy, ARGS_NONE());
   mrb_define_method(mrb, dc, "destroyed?", destroyed, ARGS_NONE());
-  mrb_define_method(mrb, dc, "acknowledge_resize?", acknowledge_resize, ARGS_NONE());
+  mrb_define_method(mrb, dc, "backbuffer", backbuffer, ARGS_NONE());
+  mrb_define_method(mrb, dc, "event_source", event_source, ARGS_NONE());
   mrb_define_class_method(mrb, dc, "flip", flip, ARGS_NONE());
+  mrb_define_class_method(mrb, dc, "update_region", update_region, ARGS_REQ(4));
+  mrb_define_class_method(mrb, am, "wait_for_vsync", wait_for_vsync, ARGS_NONE());
   mrb_define_method(mrb, dc, "height", height_getter, ARGS_NONE());
   mrb_define_method(mrb, dc, "width", width_getter, ARGS_NONE());
   mrb_define_method(mrb, dc, "window_position", window_position_getter, ARGS_NONE());
   mrb_define_class_method(mrb, am, "inhibit_screensaver=", inhibit_screensaver_setter, ARGS_REQ(1));
   mrb_define_method(mrb, dc, "resize", resize, ARGS_REQ(2));
+  mrb_define_method(mrb, dc, "acknowledge_resize?", acknowledge_resize, ARGS_NONE());
   mrb_define_method(mrb, dc, "window_position=", window_position_setter, ARGS_REQ(1));
   mrb_define_method(mrb, dc, "window_title=", window_title_setter, ARGS_REQ(1));
-  mrb_define_class_method(mrb, am, "wait_for_vsync", wait_for_vsync, ARGS_NONE());
-  mrb_define_method(mrb, dc, "event_source", event_source, ARGS_NONE());
 }

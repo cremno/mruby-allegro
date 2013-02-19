@@ -177,4 +177,61 @@ consts_init(mrb_state *mrb)
   mrb_define_global_const(mrb, "ALLEGRO_SRC_MINUS_DEST", mrb_fixnum_value(ALLEGRO_SRC_MINUS_DEST));
   mrb_define_global_const(mrb, "ALLEGRO_SRC_MINUS_DEST", mrb_fixnum_value(ALLEGRO_DEST_MINUS_SRC));
   mrb_define_global_const(mrb, "ALLEGRO_NUM_BLEND_OPERATIONS", mrb_fixnum_value(ALLEGRO_NUM_BLEND_OPERATIONS));
+
+   mrb_define_global_const(mrb, "ALLEGRO_WINDOWED", mrb_fixnum_value(ALLEGRO_WINDOWED));
+   mrb_define_global_const(mrb, "ALLEGRO_FULLSCREEN", mrb_fixnum_value(ALLEGRO_FULLSCREEN));
+   mrb_define_global_const(mrb, "ALLEGRO_OPENGL", mrb_fixnum_value(ALLEGRO_OPENGL));
+   mrb_define_global_const(mrb, "ALLEGRO_DIRECT3D_INTERNAL", mrb_fixnum_value(ALLEGRO_DIRECT3D_INTERNAL));
+   mrb_define_global_const(mrb, "ALLEGRO_RESIZABLE", mrb_fixnum_value(ALLEGRO_RESIZABLE));
+   mrb_define_global_const(mrb, "ALLEGRO_FRAMELESS", mrb_fixnum_value(ALLEGRO_FRAMELESS));
+   mrb_define_global_const(mrb, "ALLEGRO_NOFRAME", mrb_fixnum_value(ALLEGRO_NOFRAME));
+   mrb_define_global_const(mrb, "ALLEGRO_GENERATE_EXPOSE_EVENTS", mrb_fixnum_value(ALLEGRO_GENERATE_EXPOSE_EVENTS));
+   mrb_define_global_const(mrb, "ALLEGRO_OPENGL_3_0", mrb_fixnum_value(ALLEGRO_OPENGL_3_0));
+   mrb_define_global_const(mrb, "ALLEGRO_OPENGL_FORWARD_COMPATIBLE", mrb_fixnum_value(ALLEGRO_OPENGL_FORWARD_COMPATIBLE));
+   mrb_define_global_const(mrb, "ALLEGRO_FULLSCREEN_WINDOW", mrb_fixnum_value(ALLEGRO_FULLSCREEN_WINDOW));
+   mrb_define_global_const(mrb, "ALLEGRO_MINIMIZED", mrb_fixnum_value(ALLEGRO_MINIMIZED));
+
+   mrb_define_global_const(mrb, "ALLEGRO_RED_SIZE", mrb_fixnum_value(ALLEGRO_RED_SIZE));
+   mrb_define_global_const(mrb, "ALLEGRO_GREEN_SIZE", mrb_fixnum_value(ALLEGRO_GREEN_SIZE));
+   mrb_define_global_const(mrb, "ALLEGRO_BLUE_SIZE", mrb_fixnum_value(ALLEGRO_BLUE_SIZE));
+   mrb_define_global_const(mrb, "ALLEGRO_ALPHA_SIZE", mrb_fixnum_value(ALLEGRO_ALPHA_SIZE));
+   mrb_define_global_const(mrb, "ALLEGRO_RED_SHIFT", mrb_fixnum_value(ALLEGRO_RED_SHIFT));
+   mrb_define_global_const(mrb, "ALLEGRO_GREEN_SHIFT", mrb_fixnum_value(ALLEGRO_GREEN_SHIFT));
+   mrb_define_global_const(mrb, "ALLEGRO_BLUE_SHIFT", mrb_fixnum_value(ALLEGRO_BLUE_SHIFT));
+   mrb_define_global_const(mrb, "ALLEGRO_ALPHA_SHIFT", mrb_fixnum_value(ALLEGRO_ALPHA_SHIFT));
+   mrb_define_global_const(mrb, "ALLEGRO_ACC_RED_SIZE", mrb_fixnum_value(ALLEGRO_ACC_RED_SIZE));
+   mrb_define_global_const(mrb, "ALLEGRO_ACC_GREEN_SIZE", mrb_fixnum_value(ALLEGRO_ACC_GREEN_SIZE));
+   mrb_define_global_const(mrb, "ALLEGRO_ACC_BLUE_SIZE", mrb_fixnum_value(ALLEGRO_ACC_BLUE_SIZE));
+   mrb_define_global_const(mrb, "ALLEGRO_ACC_ALPHA_SIZE", mrb_fixnum_value(ALLEGRO_ACC_ALPHA_SIZE));
+   mrb_define_global_const(mrb, "ALLEGRO_STEREO", mrb_fixnum_value(ALLEGRO_STEREO));
+   mrb_define_global_const(mrb, "ALLEGRO_AUX_BUFFERS", mrb_fixnum_value(ALLEGRO_AUX_BUFFERS));
+   mrb_define_global_const(mrb, "ALLEGRO_COLOR_SIZE", mrb_fixnum_value(ALLEGRO_COLOR_SIZE));
+   mrb_define_global_const(mrb, "ALLEGRO_DEPTH_SIZE", mrb_fixnum_value(ALLEGRO_DEPTH_SIZE));
+   mrb_define_global_const(mrb, "ALLEGRO_STENCIL_SIZE", mrb_fixnum_value(ALLEGRO_STENCIL_SIZE));
+   mrb_define_global_const(mrb, "ALLEGRO_SAMPLE_BUFFERS", mrb_fixnum_value(ALLEGRO_SAMPLE_BUFFERS));
+   mrb_define_global_const(mrb, "ALLEGRO_SAMPLES", mrb_fixnum_value(ALLEGRO_SAMPLES));
+   mrb_define_global_const(mrb, "ALLEGRO_RENDER_METHOD", mrb_fixnum_value(ALLEGRO_RENDER_METHOD));
+   mrb_define_global_const(mrb, "ALLEGRO_FLOAT_COLOR", mrb_fixnum_value(ALLEGRO_FLOAT_COLOR));
+   mrb_define_global_const(mrb, "ALLEGRO_FLOAT_DEPTH", mrb_fixnum_value(ALLEGRO_FLOAT_DEPTH));
+   mrb_define_global_const(mrb, "ALLEGRO_SINGLE_BUFFER", mrb_fixnum_value(ALLEGRO_SINGLE_BUFFER));
+   mrb_define_global_const(mrb, "ALLEGRO_SWAP_METHOD", mrb_fixnum_value(ALLEGRO_SWAP_METHOD));
+   mrb_define_global_const(mrb, "ALLEGRO_COMPATIBLE_DISPLAY", mrb_fixnum_value(ALLEGRO_COMPATIBLE_DISPLAY));
+   mrb_define_global_const(mrb, "ALLEGRO_UPDATE_DISPLAY_REGION", mrb_fixnum_value(ALLEGRO_UPDATE_DISPLAY_REGION));
+   mrb_define_global_const(mrb, "ALLEGRO_VSYNC", mrb_fixnum_value(ALLEGRO_VSYNC));
+   mrb_define_global_const(mrb, "ALLEGRO_MAX_BITMAP_SIZE", mrb_fixnum_value(ALLEGRO_MAX_BITMAP_SIZE));
+   mrb_define_global_const(mrb, "ALLEGRO_SUPPORT_NPOT_BITMAP", mrb_fixnum_value(ALLEGRO_SUPPORT_NPOT_BITMAP));
+   mrb_define_global_const(mrb, "ALLEGRO_CAN_DRAW_INTO_BITMAP", mrb_fixnum_value(ALLEGRO_CAN_DRAW_INTO_BITMAP));
+   mrb_define_global_const(mrb, "ALLEGRO_SUPPORT_SEPARATE_ALPHA", mrb_fixnum_value(ALLEGRO_SUPPORT_SEPARATE_ALPHA));
+   mrb_define_global_const(mrb, "ALLEGRO_DISPLAY_OPTIONS_COUNT", mrb_fixnum_value(ALLEGRO_DISPLAY_OPTIONS_COUNT));
+
+   mrb_define_global_const(mrb, "ALLEGRO_DONTCARE", mrb_fixnum_value(ALLEGRO_DONTCARE));
+   mrb_define_global_const(mrb, "ALLEGRO_REQUIRE", mrb_fixnum_value(ALLEGRO_REQUIRE));
+   mrb_define_global_const(mrb, "ALLEGRO_SUGGEST", mrb_fixnum_value(ALLEGRO_SUGGEST));
+
+   mrb_define_global_const(mrb, "ALLEGRO_DISPLAY_ORIENTATION_0_DEGREES", mrb_fixnum_value(ALLEGRO_DISPLAY_ORIENTATION_0_DEGREES));
+   mrb_define_global_const(mrb, "ALLEGRO_DISPLAY_ORIENTATION_90_DEGREES", mrb_fixnum_value(ALLEGRO_DISPLAY_ORIENTATION_90_DEGREES));
+   mrb_define_global_const(mrb, "ALLEGRO_DISPLAY_ORIENTATION_180_DEGREES", mrb_fixnum_value(ALLEGRO_DISPLAY_ORIENTATION_180_DEGREES));
+   mrb_define_global_const(mrb, "ALLEGRO_DISPLAY_ORIENTATION_270_DEGREES", mrb_fixnum_value(ALLEGRO_DISPLAY_ORIENTATION_270_DEGREES));
+   mrb_define_global_const(mrb, "ALLEGRO_DISPLAY_ORIENTATION_FACE_UP", mrb_fixnum_value(ALLEGRO_DISPLAY_ORIENTATION_FACE_UP));
+   mrb_define_global_const(mrb, "ALLEGRO_DISPLAY_ORIENTATION_FACE_DOWN", mrb_fixnum_value(ALLEGRO_DISPLAY_ORIENTATION_FACE_DOWN));
 }
