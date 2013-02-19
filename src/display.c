@@ -189,7 +189,6 @@ height_getter(mrb_state *mrb, mrb_value self)
   return mrb_fixnum_value(al_get_display_height(d));
 }
 
-
 static mrb_value
 inhibit_screensaver_setter(mrb_state *mrb, mrb_value self)
 {

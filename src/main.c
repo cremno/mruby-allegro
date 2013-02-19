@@ -18,6 +18,7 @@ quit(const char *s)
 void
 mrb_mruby_allegro_gem_init(mrb_state* mrb)
 {
+  extern void mruby_allegro_config_init(mrb_state *);
   extern void mruby_allegro_display_init(mrb_state *);
   extern void mruby_allegro_events_init(mrb_state *);
   extern void mruby_allegro_graphics_init(mrb_state *);
@@ -35,6 +36,7 @@ mrb_mruby_allegro_gem_init(mrb_state* mrb)
   mrb_define_module(mrb, "Al");
   mrb_define_class(mrb, "AllegroError", mrb->eStandardError_class);
   mrb_gc_arena_restore(mrb, ai);
+  mruby_allegro_config_init(mrb); mrb_gc_arena_restore(mrb, ai);
   mruby_allegro_display_init(mrb); mrb_gc_arena_restore(mrb, ai);
   mruby_allegro_events_init(mrb); mrb_gc_arena_restore(mrb, ai);
   mruby_allegro_graphics_init(mrb); mrb_gc_arena_restore(mrb, ai);

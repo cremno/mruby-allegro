@@ -9,6 +9,7 @@
 #define E_ALLEGRO_ERROR (mrb_class_obj_get(mrb, "AllegroError"))
 #define C_ALLEGRO_BITMAP (get_allegro_const(mrb, "Bitmap", 6))
 #define C_ALLEGRO_COLOR (get_allegro_const(mrb, "Color", 5))
+#define C_ALLEGRO_CONFIG (get_allegro_const(mrb, "Config", 6))
 #define C_ALLEGRO_DISPLAY (get_allegro_const(mrb, "Display", 7))
 #define C_ALLEGRO_EVENT (get_allegro_const(mrb, "Event", 5))
 #define C_ALLEGRO_EVENTSOURCE (get_allegro_const(mrb, "EventSource", 11))
@@ -25,6 +26,7 @@
 #define Destroyed(o) (mrb_bool_value(!DATA_PTR(o)))
 
 extern struct mrb_data_type bitmap_data_type;
+extern struct mrb_data_type config_data_type;
 extern struct mrb_data_type color_data_type;
 extern struct mrb_data_type display_data_type;
 extern struct mrb_data_type event_data_type;
