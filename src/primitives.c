@@ -48,7 +48,7 @@ draw_triangle(mrb_state *mrb, mrb_value self)
   mrb_float y3;
   mrb_float thickness;
   ALLEGRO_COLOR *c;
-  mrb_get_args(mrb, "ffffffof", &x1, &y1, &x2, &y2, &x3, &y3, &c, &mrbal_color_data_type, &thickness);
+  mrb_get_args(mrb, "ffffffdf", &x1, &y1, &x2, &y2, &x3, &y3, &c, &mrbal_color_data_type, &thickness);
   al_draw_triangle(x1, y1, x2, y2, x3, y3, *c, thickness);
   return mrb_nil_value();
 }
