@@ -4,9 +4,9 @@
 #include <allegro5/allegro.h>
 #include "mruby-allegro.h"
 
-struct mrb_data_type const event_data_type = { "allegro/event", mrb_free };
+struct mrb_data_type const mrbal_event_data_type = { "allegro/event", mrb_free };
 
-struct mrb_data_type const eventsource_data_type = { "allegro/eventsource", NULL };
+struct mrb_data_type const mrbal_eventsource_data_type = { "allegro/eventsource", NULL };
 
 static void
 eventqueue_free(mrb_state *mrb, void *p)
@@ -16,7 +16,7 @@ eventqueue_free(mrb_state *mrb, void *p)
   }
 }
 
-struct mrb_data_type const eventqueue_data_type = { "allegro/eventqueue", eventqueue_free };
+struct mrb_data_type const mrbal_eventqueue_data_type = { "allegro/eventqueue", eventqueue_free };
 
 static mrb_value
 event_type(mrb_state *mrb, mrb_value self)
@@ -103,7 +103,7 @@ eventqueue_initialize(mrb_state *mrb, mrb_value self)
   if (!eq) {
     mrb_raise(mrb, E_ALLEGRO_ERROR, "could not create event queue");
   }
-  DATA_TYPE(self) = &eventqueue_data_type;
+  DATA_TYPE(self) = &mrbal_eventqueue_data_type;
   DATA_PTR(self) = eq;
   return self;
 }
@@ -133,7 +133,7 @@ eventqueue_register(mrb_state *mrb, mrb_value self)
   ALLEGRO_EVENT_SOURCE *es;
   Check_Destroyed(mrb, self, eventqueue, eq);
   mrb_get_args(mrb, "o", &o);
-  Data_Get_Struct(mrb, o, &eventsource_data_type, es);
+  Data_Get_Struct(mrb, o, &mrbal_eventsource_data_type, es);
   al_register_event_source(eq, es);
   return mrb_nil_value();
 }
@@ -146,7 +146,7 @@ eventqueue_unregister(mrb_state *mrb, mrb_value self)
   ALLEGRO_EVENT_SOURCE *es;
   Check_Destroyed(mrb, self, eventqueue, eq);
   mrb_get_args(mrb, "o", &o);
-  Data_Get_Struct(mrb, o, &eventsource_data_type, es);
+  Data_Get_Struct(mrb, o, &mrbal_eventsource_data_type, es);
   al_unregister_event_source(eq, es);
   return mrb_nil_value();
 }
@@ -168,7 +168,7 @@ eventqueue_next_event(mrb_state *mrb, mrb_value self)
   Check_Destroyed(mrb, self, eventqueue, eq);
   e = mrb_malloc(mrb, sizeof(*e));
   if (al_get_next_event(eq, e)) {
-    o = mrb_obj_value(Data_Wrap_Struct(mrb, C_ALLEGRO_EVENT, &event_data_type, e));
+    o = mrb_obj_value(Data_Wrap_Struct(mrb, C_ALLEGRO_EVENT, &mrbal_event_data_type, e));
   }
   else {
     o = mrb_nil_value();
@@ -201,7 +201,7 @@ eventqueue_wait_for_event(mrb_state *mrb, mrb_value self)
   Check_Destroyed(mrb, self, eventqueue, eq);
   e = mrb_malloc(mrb, sizeof(*e));
   al_wait_for_event(eq, e);
-  return mrb_obj_value(Data_Wrap_Struct(mrb, C_ALLEGRO_EVENT, &event_data_type, e));
+  return mrb_obj_value(Data_Wrap_Struct(mrb, C_ALLEGRO_EVENT, &mrbal_event_data_type, e));
 }
 
 void

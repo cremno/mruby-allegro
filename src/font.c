@@ -29,20 +29,20 @@ font_free(mrb_state *mrb, void *p)
   }
 }
 
-struct mrb_data_type const font_data_type = { "allegro/font", font_free };
+struct mrb_data_type const mrbal_font_data_type = { "allegro/font", font_free };
 
 static mrb_value
 initialize(mrb_state *mrb, mrb_value self)
 {
-  mrb_value s;
+  char *s;
   mrb_int i;
   ALLEGRO_FONT *f;
-  mrb_get_args(mrb, "Si", &s, &i);
-  f = al_load_font(mrb_string_value_cstr(mrb, &s), clamp_int(i), 0);
+  mrb_get_args(mrb, "zi", &s, &i);
+  f = al_load_font(s, mrbal_clamp_int(i), 0);
   if (!f) {
     mrb_raise(mrb, E_ALLEGRO_ERROR, "could not load font");
   }
-  DATA_TYPE(self) = &font_data_type;
+  DATA_TYPE(self) = &mrbal_font_data_type;
   DATA_PTR(self) = f;
   return self;
 }
@@ -133,7 +133,7 @@ draw_text(mrb_state *mrb, mrb_value self)
     break;
   }
   Check_Destroyed(mrb, of, font, f);
-  Data_Get_Struct(mrb, oc, &color_data_type, c);
+  Data_Get_Struct(mrb, oc, &mrbal_color_data_type, c);
   al_draw_text(f, *c, x, y, flags, s);
   return mrb_nil_value();
 }
@@ -158,7 +158,7 @@ draw_justified_text(mrb_state *mrb, mrb_value self)
     }
   }
   Check_Destroyed(mrb, of, font, f);
-  Data_Get_Struct(mrb, oc, &color_data_type, c);
+  Data_Get_Struct(mrb, oc, &mrbal_color_data_type, c);
   al_draw_justified_text(f, *c, x1, x2, y, diff, flags, s);
   return mrb_nil_value();
 }
@@ -166,7 +166,7 @@ draw_justified_text(mrb_state *mrb, mrb_value self)
 static mrb_value
 font_addon_version(mrb_state *mrb, mrb_value self)
 {
-  return version_to_hash(mrb, al_get_allegro_font_version());
+  return mrbal_version_to_hash(mrb, al_get_allegro_font_version());
 }
 
 static mrb_value
@@ -179,7 +179,7 @@ load_bitmap(mrb_state *mrb, mrb_value self)
   if (!f) {
     mrb_raise(mrb, E_ALLEGRO_ERROR, "could not load bitmap font");
   }
-  return mrb_obj_value(Data_Wrap_Struct(mrb, mrb_class_ptr(self), &font_data_type, f));
+  return mrb_obj_value(Data_Wrap_Struct(mrb, mrb_class_ptr(self), &mrbal_font_data_type, f));
 }
 
 static mrb_value
@@ -190,7 +190,7 @@ create_builtin(mrb_state *mrb, mrb_value self)
   if (!f) {
     mrb_raise(mrb, E_ALLEGRO_ERROR, "could not create builtin font");
   }
-  return mrb_obj_value(Data_Wrap_Struct(mrb, mrb_class_ptr(self), &font_data_type, f));
+  return mrb_obj_value(Data_Wrap_Struct(mrb, mrb_class_ptr(self), &mrbal_font_data_type, f));
 }
 
 static mrb_value
@@ -209,7 +209,7 @@ ttf_addon_shutdown(mrb_state *mrb, mrb_value self)
 static mrb_value
 ttf_addon_version(mrb_state *mrb, mrb_value self)
 {
-  return version_to_hash(mrb, al_get_allegro_ttf_version());
+  return mrbal_version_to_hash(mrb, al_get_allegro_ttf_version());
 }
 
 void

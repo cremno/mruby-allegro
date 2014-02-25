@@ -9,7 +9,7 @@
 
 static ALLEGRO_COLOR const black = { 0.f, 0.f, 0.f, 1.f };
 
-struct mrb_data_type const color_data_type = { "allegro/color", mrb_free };
+struct mrb_data_type const mrbal_color_data_type = { "allegro/color", mrb_free };
 
 static void
 bitmap_free(mrb_state *mrb, void *p)
@@ -19,7 +19,7 @@ bitmap_free(mrb_state *mrb, void *p)
   }
 }
 
-struct mrb_data_type const bitmap_data_type = { "allegro/bitmap", bitmap_free };
+struct mrb_data_type const mrbal_bitmap_data_type = { "allegro/bitmap", bitmap_free };
 
 static mrb_value
 color_initialize(mrb_state *mrb, mrb_value self)
@@ -30,11 +30,11 @@ color_initialize(mrb_state *mrb, mrb_value self)
   ALLEGRO_COLOR *c;
   argc = mrb_get_args(mrb, "|o", &o);
   if (argc) {
-    Data_Get_Struct(mrb, o, &color_data_type, oc);
+    Data_Get_Struct(mrb, o, &mrbal_color_data_type, oc);
   }
   c = mrb_malloc(mrb, sizeof(*c));
   *c = !argc ? black : *oc;
-  DATA_TYPE(self) = &color_data_type;
+  DATA_TYPE(self) = &mrbal_color_data_type;
   DATA_PTR(self) = c;
   return self;
 }
@@ -48,8 +48,8 @@ color_map_rgb(mrb_state *mrb, mrb_value self)
   ALLEGRO_COLOR *c;
   mrb_get_args(mrb, "iii", &r, &g, &b);
   c = mrb_malloc(mrb, sizeof(*c));
-  *c = al_map_rgb(clamp_uc(r), clamp_uc(g), clamp_uc(b));
-  return mrb_obj_value(Data_Wrap_Struct(mrb, mrb_class_ptr(self), &color_data_type, c));
+  *c = al_map_rgb(mrbal_clamp_uc(r), mrbal_clamp_uc(g), mrbal_clamp_uc(b));
+  return mrb_obj_value(Data_Wrap_Struct(mrb, mrb_class_ptr(self), &mrbal_color_data_type, c));
 }
 
 static mrb_value
@@ -62,8 +62,8 @@ color_map_rgba(mrb_state *mrb, mrb_value self)
   ALLEGRO_COLOR *c;
   mrb_get_args(mrb, "iiii", &r, &g, &b, &a);
   c = mrb_malloc(mrb, sizeof(*c));
-  *c = al_map_rgba(clamp_uc(r), clamp_uc(g), clamp_uc(b), clamp_uc(a));
-  return mrb_obj_value(Data_Wrap_Struct(mrb, mrb_class_ptr(self), &color_data_type, c));
+  *c = al_map_rgba(mrbal_clamp_uc(r), mrbal_clamp_uc(g), mrbal_clamp_uc(b), mrbal_clamp_uc(a));
+  return mrb_obj_value(Data_Wrap_Struct(mrb, mrb_class_ptr(self), &mrbal_color_data_type, c));
 }
 
 static mrb_value
@@ -75,8 +75,8 @@ color_map_rgb_f(mrb_state *mrb, mrb_value self)
   ALLEGRO_COLOR *c;
   mrb_get_args(mrb, "fff", &r, &g, &b);
   c = mrb_malloc(mrb, sizeof(*c));
-  *c = al_map_rgb_f(clamp_f(r), clamp_f(g), clamp_f(b));
-  return mrb_obj_value(Data_Wrap_Struct(mrb, mrb_class_ptr(self), &color_data_type, c));
+  *c = al_map_rgb_f(mrbal_clamp_f(r), mrbal_clamp_f(g), mrbal_clamp_f(b));
+  return mrb_obj_value(Data_Wrap_Struct(mrb, mrb_class_ptr(self), &mrbal_color_data_type, c));
 }
 
 static mrb_value
@@ -89,8 +89,8 @@ color_map_rgba_f(mrb_state *mrb, mrb_value self)
   ALLEGRO_COLOR *c;
   mrb_get_args(mrb, "ffff", &r, &g, &b, &a);
   c = mrb_malloc(mrb, sizeof(*c));
-  *c = al_map_rgba_f(clamp_f(r), clamp_f(g), clamp_f(b), clamp_f(a));
-  return mrb_obj_value(Data_Wrap_Struct(mrb, mrb_class_ptr(self), &color_data_type, c));
+  *c = al_map_rgba_f(mrbal_clamp_f(r), mrbal_clamp_f(g), mrbal_clamp_f(b), mrbal_clamp_f(a));
+  return mrb_obj_value(Data_Wrap_Struct(mrb, mrb_class_ptr(self), &mrbal_color_data_type, c));
 }
 
 static mrb_value
@@ -101,7 +101,7 @@ color_unmap_rgb(mrb_state *mrb, mrb_value self)
   unsigned char g;
   unsigned char b;
   mrb_value ary;
-  Data_Get_Struct(mrb, self, &color_data_type, c);
+  Data_Get_Struct(mrb, self, &mrbal_color_data_type, c);
   al_unmap_rgb(*c, &r, &g, &b);
   ary = mrb_ary_new_capa(mrb, 3);
   mrb_ary_push(mrb, ary, mrb_fixnum_value(r));
@@ -118,7 +118,7 @@ color_unmap_rgb_f(mrb_state *mrb, mrb_value self)
   float g;
   float b;
   mrb_value ary;
-  Data_Get_Struct(mrb, self, &color_data_type, c);
+  Data_Get_Struct(mrb, self, &mrbal_color_data_type, c);
   al_unmap_rgb_f(*c, &r, &g, &b);
   ary = mrb_ary_new_capa(mrb, 3);
   mrb_ary_push(mrb, ary, mrb_float_value(mrb, r));
@@ -136,7 +136,7 @@ color_unmap_rgba(mrb_state *mrb, mrb_value self)
   unsigned char b;
   unsigned char a;
   mrb_value ary;
-  Data_Get_Struct(mrb, self, &color_data_type, c);
+  Data_Get_Struct(mrb, self, &mrbal_color_data_type, c);
   al_unmap_rgba(*c, &r, &g, &b, &a);
   ary = mrb_ary_new_capa(mrb, 4);
   mrb_ary_push(mrb, ary, mrb_fixnum_value(r));
@@ -155,7 +155,7 @@ color_unmap_rgba_f(mrb_state *mrb, mrb_value self)
   float b;
   float a;
   mrb_value ary;
-  Data_Get_Struct(mrb, self, &color_data_type, c);
+  Data_Get_Struct(mrb, self, &mrbal_color_data_type, c);
   al_unmap_rgba_f(*c, &r, &g, &b, &a);
   ary = mrb_ary_new_capa(mrb, 4);
   mrb_ary_push(mrb, ary, mrb_float_value(mrb, r));
@@ -172,28 +172,28 @@ color_inspect(mrb_state *mrb, mrb_value self)
   ALLEGRO_COLOR *c;
   char const *s;
   int len;
-  Data_Get_Struct(mrb, self, &color_data_type, c);
+  Data_Get_Struct(mrb, self, &mrbal_color_data_type, c);
   s = mrb_obj_classname(mrb, self);
   len = snprintf(buf, sizeof(buf), "#<%s: r=%f, g=%f, b=%f, a=%f>", s, c->r, c->g, c->b, c->a);
   return mrb_str_new(mrb, buf, len);
 }
 
-#define ATTR(attr) static mrb_value \
-color_ ## attr ## _getter(mrb_state *mrb, mrb_value self)\
-{\
-  ALLEGRO_COLOR *c;\
-  Data_Get_Struct(mrb, self, &color_data_type, c);\
-  return mrb_float_value(mrb, c->attr);\
-}\
-static mrb_value \
-color_ ## attr ## _setter(mrb_state *mrb, mrb_value self)\
-{\
-  ALLEGRO_COLOR *c;\
-  mrb_float f;\
-  Data_Get_Struct(mrb, self, &color_data_type, c);\
-  mrb_get_args(mrb, "f", &f);\
-  c->attr = clamp_f(f);\
-  return mrb_float_value(mrb, f);\
+#define ATTR(attr) static mrb_value                       \
+color_ ## attr ## _getter(mrb_state *mrb, mrb_value self) \
+{                                                         \
+  ALLEGRO_COLOR *c;                                       \
+  Data_Get_Struct(mrb, self, &mrbal_color_data_type, c);  \
+  return mrb_float_value(mrb, c->attr);                   \
+}                                                         \
+static mrb_value                                          \
+color_ ## attr ## _setter(mrb_state *mrb, mrb_value self) \
+{                                                         \
+  ALLEGRO_COLOR *c;                                       \
+  mrb_float f;                                            \
+  Data_Get_Struct(mrb, self, &mrbal_color_data_type, c);  \
+  mrb_get_args(mrb, "f", &f);                             \
+  c->attr = mrbal_clamp_f(f);                             \
+  return mrb_float_value(mrb, f);                         \
 }
 
 ATTR(r)
@@ -219,11 +219,11 @@ bitmap_create(mrb_state *mrb, mrb_value self)
   mrb_int h;
   ALLEGRO_BITMAP *b;
   mrb_get_args(mrb, "ii", &w, &h);
-  b = al_create_bitmap(clamp_int(w), clamp_int(h));
+  b = al_create_bitmap(mrbal_clamp_int(w), mrbal_clamp_int(h));
   if (!b) {
     mrb_raise(mrb, E_ALLEGRO_ERROR, "creating bitmap failed");
   }
-  return mrb_obj_value(Data_Wrap_Struct(mrb, mrb_class_ptr(self), &bitmap_data_type, b));
+  return mrb_obj_value(Data_Wrap_Struct(mrb, mrb_class_ptr(self), &mrbal_bitmap_data_type, b));
 }
 
 static mrb_value
@@ -269,8 +269,8 @@ bitmap_get_pixel(mrb_state *mrb, mrb_value self)
   Check_Destroyed(mrb, self, bitmap, b);
   mrb_get_args(mrb, "ii", &x, &y);
   c = mrb_malloc(mrb, sizeof(*c));
-  *c = al_get_pixel(b, clamp_int(x), clamp_int(y));
-  return mrb_obj_value(Data_Wrap_Struct(mrb, C_ALLEGRO_COLOR, &color_data_type, c));
+  *c = al_get_pixel(b, mrbal_clamp_int(x), mrbal_clamp_int(y));
+  return mrb_obj_value(Data_Wrap_Struct(mrb, C_ALLEGRO_COLOR, &mrbal_color_data_type, c));
 }
 
 static mrb_value
@@ -298,7 +298,7 @@ clear_to_color(mrb_state *mrb, mrb_value self)
   }
   else {
     ALLEGRO_COLOR *c;
-    Data_Get_Struct(mrb, o, &color_data_type, c);
+    Data_Get_Struct(mrb, o, &mrbal_color_data_type, c);
     al_clear_to_color(*c);
   }
   return mrb_nil_value();
@@ -316,7 +316,7 @@ bitmap_draw(mrb_state *mrb, mrb_value self)
   int flags;
   Check_Destroyed(mrb, self, bitmap, b);
   argc = mrb_get_args(mrb, "ff|nn", &dx, &dy, &flag1, &flag2) - 2;
-  flags = argc > 0 ? bitmap_get_flags(mrb, argc, flag1, flag2) : 0;
+  flags = argc > 0 ? mrbal_bitmap_get_flags(mrb, argc, flag1, flag2) : 0;
   al_draw_bitmap(b, dx, dy, flags);
   return mrb_nil_value();
 }
@@ -335,8 +335,8 @@ bitmap_draw_tinted(mrb_state *mrb, mrb_value self)
   int flags;
   Check_Destroyed(mrb, self, bitmap, b);
   argc = mrb_get_args(mrb, "off|nn", &o, &dx, &dy, &flag1, &flag2) - 3;
-  Data_Get_Struct(mrb, o, &color_data_type, tint);
-  flags = argc > 0 ? bitmap_get_flags(mrb, argc, flag1, flag2) : 0;
+  Data_Get_Struct(mrb, o, &mrbal_color_data_type, tint);
+  flags = argc > 0 ? mrbal_bitmap_get_flags(mrb, argc, flag1, flag2) : 0;
   al_draw_tinted_bitmap(b, *tint, dx, dy, flags);
   return mrb_nil_value();
 }
@@ -357,7 +357,7 @@ bitmap_draw_region(mrb_state *mrb, mrb_value self)
   int flags;
   Check_Destroyed(mrb, self, bitmap, b);
   argc = mrb_get_args(mrb, "ffffff|nn", &sx, &sy, &sw, &sh, &dx, &dy, &flag1, &flag2) - 6;
-  flags = argc > 0 ? bitmap_get_flags(mrb, argc, flag1, flag2) : 0;
+  flags = argc > 0 ? mrbal_bitmap_get_flags(mrb, argc, flag1, flag2) : 0;
   al_draw_bitmap_region(b, sx, sy, sw, sh, dx, dy, flags);
   return mrb_nil_value();
 }
@@ -380,8 +380,8 @@ bitmap_draw_tinted_region(mrb_state *mrb, mrb_value self)
   int flags;
   Check_Destroyed(mrb, self, bitmap, b);
   argc = mrb_get_args(mrb, "offffff|nn", &o, &sx, &sy, &sw, &sh, &dx, &dy, &flag1, &flag2) - 7;
-  Data_Get_Struct(mrb, o, &color_data_type, tint);
-  flags = argc > 0 ? bitmap_get_flags(mrb, argc, flag1, flag2) : 0;
+  Data_Get_Struct(mrb, o, &mrbal_color_data_type, tint);
+  flags = argc > 0 ? mrbal_bitmap_get_flags(mrb, argc, flag1, flag2) : 0;
   al_draw_tinted_bitmap_region(b, *tint, sx, sy, sw, sh, dx, dy, flags);
   return mrb_nil_value();
 }
@@ -394,7 +394,7 @@ draw_pixel(mrb_state *mrb, mrb_value self)
   mrb_value o;
   ALLEGRO_COLOR *c;
   mrb_get_args(mrb, "ffo", &x, &y, &o);
-  Data_Get_Struct(mrb, o, &color_data_type, c);
+  Data_Get_Struct(mrb, o, &mrbal_color_data_type, c);
   al_draw_pixel(x, y, *c);
   return mrb_nil_value();
 }
@@ -414,7 +414,7 @@ bitmap_draw_rotated(mrb_state *mrb, mrb_value self)
   int flags;
   Check_Destroyed(mrb, self, bitmap, b);
   argc = mrb_get_args(mrb, "fffff|nn", &cx, &cy, &dx, &dy, &angle, &flag1, &flag2) - 5;
-  flags = argc > 0 ? bitmap_get_flags(mrb, argc, flag1, flag2) : 0;
+  flags = argc > 0 ? mrbal_bitmap_get_flags(mrb, argc, flag1, flag2) : 0;
   al_draw_rotated_bitmap(b, cx, cy, dx, dy, angle, flags);
   return mrb_nil_value();
 }
@@ -436,8 +436,8 @@ bitmap_draw_tinted_rotated(mrb_state *mrb, mrb_value self)
   int flags;
   Check_Destroyed(mrb, self, bitmap, b);
   argc = mrb_get_args(mrb, "cfffff|nn", &o, &cx, &cy, &dx, &dy, &angle, &flag1, &flag2) - 6;
-  Data_Get_Struct(mrb, o, &color_data_type, tint);
-  flags = argc > 0 ? bitmap_get_flags(mrb, argc, flag1, flag2) : 0;
+  Data_Get_Struct(mrb, o, &mrbal_color_data_type, tint);
+  flags = argc > 0 ? mrbal_bitmap_get_flags(mrb, argc, flag1, flag2) : 0;
   al_draw_tinted_rotated_bitmap(b, *tint, cx, cy, dx, dy, angle, flags);
   return mrb_nil_value();
 }
@@ -459,7 +459,7 @@ bitmap_draw_scaled_rotated(mrb_state *mrb, mrb_value self)
   int flags;
   Check_Destroyed(mrb, self, bitmap, b);
   argc = mrb_get_args(mrb, "fffffff|nn", &cx, &cy, &dx, &dy, &xscale, &yscale, &angle, &flag1, &flag2) - 7;
-  flags = argc > 0 ? bitmap_get_flags(mrb, argc, flag1, flag2) : 0;
+  flags = argc > 0 ? mrbal_bitmap_get_flags(mrb, argc, flag1, flag2) : 0;
   al_draw_scaled_rotated_bitmap(b, cx, cy, dx, dy, xscale, yscale, angle, flags);
   return mrb_nil_value();
 }
@@ -483,8 +483,8 @@ bitmap_draw_tinted_scaled_rotated(mrb_state *mrb, mrb_value self)
   int flags;
   Check_Destroyed(mrb, self, bitmap, b);
   argc = mrb_get_args(mrb, "offfffff|nn", &o, &cx, &cy, &dx, &dy, &xscale, &yscale, &angle, &flag1, &flag2) - 8;
-  Data_Get_Struct(mrb, o, &color_data_type, tint);
-  flags = argc > 0 ? bitmap_get_flags(mrb, argc, flag1, flag2) : 0;
+  Data_Get_Struct(mrb, o, &mrbal_color_data_type, tint);
+  flags = argc > 0 ? mrbal_bitmap_get_flags(mrb, argc, flag1, flag2) : 0;
   al_draw_tinted_scaled_rotated_bitmap(b, *tint, cx, cy, dx, dy, xscale, yscale, angle, flags);
   return mrb_nil_value();
 }
@@ -512,8 +512,8 @@ bitmap_draw_tinted_scaled_rotated_region(mrb_state *mrb, mrb_value self)
   int flags;
   Check_Destroyed(mrb, self, bitmap, b);
   argc = mrb_get_args(mrb, "ffffofffffff|nn", &sx, &sy, &sw, &sh, &o, &cx, &cy, &dx, &dy, &xscale, &yscale, &angle, &flag1, &flag2) - 12;
-  Data_Get_Struct(mrb, o, &color_data_type, tint);
-  flags = argc > 0 ? bitmap_get_flags(mrb, argc, flag1, flag2) : 0;
+  Data_Get_Struct(mrb, o, &mrbal_color_data_type, tint);
+  flags = argc > 0 ? mrbal_bitmap_get_flags(mrb, argc, flag1, flag2) : 0;
   al_draw_tinted_scaled_rotated_bitmap_region(b, sx, sy, sw, sh, *tint, cx, cy, dx, dy, xscale, yscale, angle, flags);
   return mrb_nil_value();
 }
@@ -536,7 +536,7 @@ bitmap_draw_scaled(mrb_state *mrb, mrb_value self)
   int flags;
   Check_Destroyed(mrb, self, bitmap, b);
   argc = mrb_get_args(mrb, "ffffffff|nn", &sx, &sy, &sw, &sh, &dx, &dy, &dw, &dh, &flag1, &flag2) - 8;
-  flags = argc > 0 ? bitmap_get_flags(mrb, argc, flag1, flag2) : 0;
+  flags = argc > 0 ? mrbal_bitmap_get_flags(mrb, argc, flag1, flag2) : 0;
   al_draw_scaled_bitmap(b, sx, sy, sw, sh, dx, dy, dw, dh, flags);
   return mrb_nil_value();
 }
@@ -561,8 +561,8 @@ bitmap_draw_tinted_scaled(mrb_state *mrb, mrb_value self)
   int flags;
   Check_Destroyed(mrb, self, bitmap, b);
   argc = mrb_get_args(mrb, "offffffff|nn", &o, &sx, &sy, &sw, &sh, &dx, &dy, &dw, &dh, &flag1, &flag2) - 9;
-  Data_Get_Struct(mrb, o, &color_data_type, tint);
-  flags = argc > 0 ? bitmap_get_flags(mrb, argc, flag1, flag2) : 0;
+  Data_Get_Struct(mrb, o, &mrbal_color_data_type, tint);
+  flags = argc > 0 ? mrbal_bitmap_get_flags(mrb, argc, flag1, flag2) : 0;
   al_draw_tinted_scaled_bitmap(b, *tint, sx, sy, sw, sh, dx, dy, dw, dh, flags);
   return mrb_nil_value();
 }
@@ -575,8 +575,8 @@ put_pixel(mrb_state *mrb, mrb_value self)
   mrb_value o;
   ALLEGRO_COLOR *c;
   mrb_get_args(mrb, "iio", &x, &y, &o);
-  Data_Get_Struct(mrb, o, &color_data_type, c);
-  al_put_pixel(clamp_int(x), clamp_int(y), *c);
+  Data_Get_Struct(mrb, o, &mrbal_color_data_type, c);
+  al_put_pixel(mrbal_clamp_int(x), mrbal_clamp_int(y), *c);
   return mrb_nil_value();
 }
 
@@ -588,8 +588,8 @@ put_blended_pixel(mrb_state *mrb, mrb_value self)
   mrb_value o;
   ALLEGRO_COLOR *c;
   mrb_get_args(mrb, "iio", &x, &y, &o);
-  Data_Get_Struct(mrb, o, &color_data_type, c);
-  al_put_blended_pixel(clamp_int(x), clamp_int(y), *c);
+  Data_Get_Struct(mrb, o, &mrbal_color_data_type, c);
+  al_put_blended_pixel(mrbal_clamp_int(x), mrbal_clamp_int(y), *c);
   return mrb_nil_value();
 }
 
@@ -597,16 +597,18 @@ static mrb_value
 target_setter(mrb_state *mrb, mrb_value self)
 {
   mrb_value o;
+  struct mrb_data_type const *dt;
   mrb_get_args(mrb, "o", &o);
   if (mrb_type(o) != MRB_TT_DATA) {
     goto type_error;
   }
-  if (DATA_TYPE(o) == &bitmap_data_type) {
+  dt = DATA_TYPE(o);
+  if (dt == &mrbal_bitmap_data_type) {
     ALLEGRO_BITMAP *b;
     Check_Destroyed(mrb, o, bitmap, b);
     al_set_target_bitmap(b);
   }
-  else if (DATA_TYPE(o) == &display_data_type) {
+  else if (dt == &mrbal_display_data_type) {
     ALLEGRO_DISPLAY *d;
     Check_Destroyed(mrb, o, display, d);
     al_set_target_backbuffer(d);
@@ -614,8 +616,8 @@ target_setter(mrb_state *mrb, mrb_value self)
   else {
 type_error:
     mrb_raisef(mrb, E_TYPE_ERROR, "expected %S or %S",
-      mrb_str_new_static(mrb, bitmap_data_type.struct_name, strlen(bitmap_data_type.struct_name)),
-      mrb_str_new_static(mrb, display_data_type.struct_name, strlen(display_data_type.struct_name)));
+      mrb_str_new_static(mrb, mrbal_bitmap_data_type.struct_name, strlen(mrbal_bitmap_data_type.struct_name)),
+      mrb_str_new_static(mrb, mrbal_display_data_type.struct_name, strlen(mrbal_display_data_type.struct_name)));
   }
   return o;
 }
@@ -628,7 +630,7 @@ display_current(mrb_state *mrb, mrb_value self)
   // if (!d) {
   //   mrb_raise(E_ALLEGRO_ERROR, "none current display for the calling thread");
   // }
-  return mrb_obj_value(Data_Wrap_Struct(mrb, C_ALLEGRO_DISPLAY, &display_data_type, d));
+  return mrb_obj_value(Data_Wrap_Struct(mrb, C_ALLEGRO_DISPLAY, &mrbal_display_data_type, d));
 }
 
 static mrb_value
@@ -715,7 +717,7 @@ convert_mask_to_alpha(mrb_state *mrb, mrb_value self)
   ALLEGRO_COLOR *c;
   Check_Destroyed(mrb, self, bitmap, b);
   mrb_get_args(mrb, "o", &o);
-  Data_Get_Struct(mrb, o, &color_data_type, c);
+  Data_Get_Struct(mrb, o, &mrbal_color_data_type, c);
   al_convert_mask_to_alpha(b, *c);
   return mrb_nil_value();
 }
@@ -745,7 +747,7 @@ bitmap_load(mrb_state *mrb, mrb_value self)
   if (!b) {
     mrb_raise(mrb, E_ALLEGRO_ERROR, "loading bitmap failed");
   }
-  return mrb_obj_value(Data_Wrap_Struct(mrb, mrb_class_ptr(self), &bitmap_data_type, b));
+  return mrb_obj_value(Data_Wrap_Struct(mrb, mrb_class_ptr(self), &mrbal_bitmap_data_type, b));
 }
 
 static mrb_value

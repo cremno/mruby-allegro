@@ -1,12 +1,20 @@
 #include <limits.h>
 #include <stdint.h>
 #include <mruby.h>
+#include <mruby/class.h>
 #include <mruby/hash.h>
+#include <mruby/variable.h>
 #include <allegro5/allegro.h>
 #include "mruby-allegro.h"
 
+struct RClass *
+mrbal_get_const(mrb_state *mrb, char const *name)
+{
+  return mrb_class_ptr(mrb_const_get(mrb, mrb_obj_value(M_ALLEGRO), mrb_intern(mrb, name, strlen(name))));
+}
+
 mrb_value
-version_to_hash(mrb_state *mrb, uint32_t v)
+mrbal_version_to_hash(mrb_state *mrb, uint32_t v)
 {
   mrb_value h = mrb_hash_new_capa(mrb, 4);
   mrb_hash_set(mrb, h, mrb_symbol_value(mrb_intern_lit(mrb, "major")),    mrb_fixnum_value((v >> 24) & 0xff));
@@ -17,7 +25,7 @@ version_to_hash(mrb_state *mrb, uint32_t v)
 }
 
 unsigned char
-clamp_uc(mrb_int i)
+mrbal_clamp_uc(mrb_int i)
 {
   if (i > UCHAR_MAX) {
     return UCHAR_MAX;
@@ -31,7 +39,7 @@ clamp_uc(mrb_int i)
 }
 
 int
-clamp_int(mrb_int i)
+mrbal_clamp_int(mrb_int i)
 {
   if (sizeof(int) <= sizeof(mrb_int)) {
   	return i;
@@ -50,7 +58,7 @@ clamp_int(mrb_int i)
 }
 
 float
-clamp_f(mrb_float i)
+mrbal_clamp_f(mrb_float i)
 {
   if (i > 1.f) {
     return 1.f;
@@ -64,7 +72,7 @@ clamp_f(mrb_float i)
 }
 
 int
-bitmap_get_flags(mrb_state *mrb, unsigned argc, mrb_sym s1, mrb_sym s2)
+mrbal_bitmap_get_flags(mrb_state *mrb, unsigned argc, mrb_sym s1, mrb_sym s2)
 {
   mrb_sym fh = mrb_intern_lit(mrb, "flip_horizontal");
   mrb_sym fv = mrb_intern_lit(mrb, "flip_vertical");

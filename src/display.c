@@ -16,7 +16,7 @@ display_free(mrb_state *mrb, void *p)
   }
 }
 
-struct mrb_data_type const display_data_type = { "allegro/display", display_free };
+struct mrb_data_type const mrbal_display_data_type = { "allegro/display", display_free };
 
 static mrb_value
 initialize(mrb_state *mrb, mrb_value self)
@@ -24,9 +24,9 @@ initialize(mrb_state *mrb, mrb_value self)
   mrb_int w;
   mrb_int h;
   ALLEGRO_DISPLAY *d;
-  DATA_TYPE(self) = &display_data_type;
+  DATA_TYPE(self) = &mrbal_display_data_type;
   mrb_get_args(mrb, "ii", &w, &h);
-  d = al_create_display(clamp_int(w), clamp_int(h));
+  d = al_create_display(mrbal_clamp_int(w), mrbal_clamp_int(h));
   if (!d) {
     mrb_raise(mrb, E_ALLEGRO_ERROR, "could not initialize display");
   }
@@ -58,7 +58,7 @@ event_source(mrb_state *mrb, mrb_value self)
   ALLEGRO_EVENT_SOURCE *es;
   Check_Destroyed(mrb, self, display, d);
   es = al_get_display_event_source(d);
-  return mrb_obj_value(Data_Wrap_Struct(mrb, C_ALLEGRO_EVENTSOURCE, &eventsource_data_type, es));
+  return mrb_obj_value(Data_Wrap_Struct(mrb, C_ALLEGRO_EVENTSOURCE, &mrbal_eventsource_data_type, es));
 }
 
 static mrb_value
@@ -68,7 +68,7 @@ backbuffer(mrb_state *mrb, mrb_value self)
   ALLEGRO_BITMAP *b;
   Check_Destroyed(mrb, self, display, d);
   b = al_get_backbuffer(d);
-  return mrb_obj_value(Data_Wrap_Struct(mrb, C_ALLEGRO_BITMAP, &bitmap_data_type, b));
+  return mrb_obj_value(Data_Wrap_Struct(mrb, C_ALLEGRO_BITMAP, &mrbal_bitmap_data_type, b));
 }
 
 static mrb_value
@@ -123,7 +123,7 @@ resize(mrb_state *mrb, mrb_value self)
   mrb_int h;
   Get_Display(mrb, self, d);
   mrb_get_args(mrb, "ii", &w, &h);
-  return mrb_bool_value(al_resize_display(d, clamp_int(w), clamp_int(h)));
+  return mrb_bool_value(al_resize_display(d, mrbal_clamp_int(w), mrbal_clamp_int(h)));
 }
 
 static mrb_value

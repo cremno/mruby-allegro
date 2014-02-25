@@ -12,7 +12,7 @@ timer_free(mrb_state *mrb, void *p)
   }
 }
 
-struct mrb_data_type const timer_data_type = { "allegro/timer", timer_free };
+struct mrb_data_type const mrbal_timer_data_type = { "allegro/timer", timer_free };
 
 static mrb_value
 initialize(mrb_state *mrb, mrb_value self)
@@ -24,7 +24,7 @@ initialize(mrb_state *mrb, mrb_value self)
   if (!t) {
     mrb_raise(mrb, E_ALLEGRO_ERROR, "failed to initialize timer");
   }
-  DATA_TYPE(self) = &timer_data_type;
+  DATA_TYPE(self) = &mrbal_timer_data_type;
   DATA_PTR(self) = t;
   return self;
 }
@@ -98,7 +98,7 @@ event_source(mrb_state *mrb, mrb_value self)
   ALLEGRO_EVENT_SOURCE *es;
   Check_Destroyed(mrb, self, timer, t);
   es = al_get_timer_event_source(t);
-  return mrb_obj_value(Data_Wrap_Struct(mrb, C_ALLEGRO_EVENTSOURCE, &eventsource_data_type, es));
+  return mrb_obj_value(Data_Wrap_Struct(mrb, C_ALLEGRO_EVENTSOURCE, &mrbal_eventsource_data_type, es));
 }
 
 void

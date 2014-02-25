@@ -19,7 +19,7 @@ shutdown_addon(mrb_state *mrb, mrb_value self)
 static mrb_value
 version(mrb_state *mrb, mrb_value self)
 {
-  return version_to_hash(mrb, al_get_allegro_image_version());
+  return mrbal_version_to_hash(mrb, al_get_allegro_image_version());
 }
 
 void

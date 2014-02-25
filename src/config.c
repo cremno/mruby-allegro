@@ -12,7 +12,7 @@ config_free(mrb_state *mrb, void *p)
   }
 }
 
-struct mrb_data_type const config_data_type = { "allegro/config", config_free };
+struct mrb_data_type const mrbal_config_data_type = { "allegro/config", config_free };
 
 static mrb_value
 config_create(mrb_state *mrb, mrb_value self)
@@ -24,7 +24,7 @@ config_create(mrb_state *mrb, mrb_value self)
   if (!cfg) {
     mrb_raise(mrb, E_ALLEGRO_ERROR, "could not create config");
   }
-  data = mrb_data_object_alloc(mrb, mrb_class_ptr(self), cfg, &config_data_type);
+  data = mrb_data_object_alloc(mrb, mrb_class_ptr(self), cfg, &mrbal_config_data_type);
   return mrb_obj_value(data);
 }
 
@@ -59,7 +59,7 @@ config_load_file(mrb_state *mrb, mrb_value self)
   if (!cfg) {
     mrb_raise(mrb, E_ALLEGRO_ERROR, "could not load config");
   }
-  data = mrb_data_object_alloc(mrb, mrb_class_ptr(self), cfg, &config_data_type);
+  data = mrb_data_object_alloc(mrb, mrb_class_ptr(self), cfg, &mrbal_config_data_type);
   return mrb_obj_value(data);
 }
 
@@ -147,7 +147,7 @@ config_merge(mrb_state *mrb, mrb_value self)
   mrb_get_args(mrb, "o", &o);
   Check_Destroyed(mrb, o, config, cfg2);
   cfg_new = al_merge_config(cfg1, cfg2);
-  data = mrb_data_object_alloc(mrb, mrb_obj_class(mrb, self), cfg_new, &config_data_type);
+  data = mrb_data_object_alloc(mrb, mrb_obj_class(mrb, self), cfg_new, &mrbal_config_data_type);
   return mrb_obj_value(data);
 }
 

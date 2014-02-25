@@ -30,7 +30,7 @@ event_source(mrb_state *mrb, mrb_value self)
   if (!es) {
     mrb_raise(mrb, E_ALLEGRO_ERROR, "keyboard subsystem is not installed");
   }
-  return mrb_obj_value(Data_Wrap_Struct(mrb, C_ALLEGRO_EVENTSOURCE, &eventsource_data_type, es));
+  return mrb_obj_value(Data_Wrap_Struct(mrb, C_ALLEGRO_EVENTSOURCE, &mrbal_eventsource_data_type, es));
 }
 
 void

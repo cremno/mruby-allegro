@@ -39,7 +39,7 @@ global_msgbox(mrb_state *mrb, mrb_value self)
 static mrb_value
 version(mrb_state *mrb, mrb_value self)
 {
-  return version_to_hash(mrb, al_get_allegro_native_dialog_version());
+  return mrbal_version_to_hash(mrb, al_get_allegro_native_dialog_version());
 }
 
 void

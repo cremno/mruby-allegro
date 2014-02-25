@@ -1,6 +1,4 @@
 #include <mruby.h>
-#include <mruby/hash.h>
-#include <mruby/data.h>
 #include <mruby/string.h>
 #include <allegro5/allegro.h>
 #include "mruby-allegro.h"
@@ -8,7 +6,7 @@
 static mrb_value
 version(mrb_state *mrb, mrb_value self)
 {
-  return version_to_hash(mrb, al_get_allegro_version());
+  return mrbal_version_to_hash(mrb, al_get_allegro_version());
 }
 
 static mrb_value

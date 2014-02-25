@@ -9,7 +9,7 @@
 static mrb_value
 version(mrb_state *mrb, mrb_value self)
 {
-  return version_to_hash(mrb, al_get_allegro_primitives_version());
+  return mrbal_version_to_hash(mrb, al_get_allegro_primitives_version());
 }
 
 static mrb_value
@@ -36,7 +36,7 @@ draw_line(mrb_state *mrb, mrb_value self)
   mrb_float thickness;
   ALLEGRO_COLOR *ac;
   mrb_get_args(mrb, "ffffof", &x1, &y1, &x2, &y2, &c, &thickness);
-  Data_Get_Struct(mrb, c, &color_data_type, ac);
+  Data_Get_Struct(mrb, c, &mrbal_color_data_type, ac);
   al_draw_line(x1, y1, x2, y2, *ac, thickness);
   return mrb_nil_value();
 }
@@ -54,7 +54,7 @@ draw_triangle(mrb_state *mrb, mrb_value self)
   mrb_float thickness;
   ALLEGRO_COLOR *ac;
   mrb_get_args(mrb, "ffffffof", &x1, &y1, &x2, &y2, &x3, &y3, &c, &thickness);
-  Data_Get_Struct(mrb, c, &color_data_type, ac);
+  Data_Get_Struct(mrb, c, &mrbal_color_data_type, ac);
   al_draw_triangle(x1, y1, x2, y2, x3, y3, *ac, thickness);
   return mrb_nil_value();
 }
@@ -71,7 +71,7 @@ draw_filled_triangle(mrb_state *mrb, mrb_value self)
   mrb_value c;
   ALLEGRO_COLOR *ac;
   mrb_get_args(mrb, "ffffffo", &x1, &y1, &x2, &y2, &x3, &y3, &c);
-  Data_Get_Struct(mrb, c, &color_data_type, ac);
+  Data_Get_Struct(mrb, c, &mrbal_color_data_type, ac);
   al_draw_filled_triangle(x1, y1, x2, y2, x3, y3, *ac);
   return mrb_nil_value();
 }
@@ -87,7 +87,7 @@ draw_rectangle(mrb_state *mrb, mrb_value self)
   mrb_float thickness;
   ALLEGRO_COLOR *ac;
   mrb_get_args(mrb, "ffffof", &x1, &y1, &x2, &y2, &c, &thickness);
-  Data_Get_Struct(mrb, c, &color_data_type, ac);
+  Data_Get_Struct(mrb, c, &mrbal_color_data_type, ac);
   al_draw_rectangle(x1, y1, x2, y2, *ac, thickness);
   return mrb_nil_value();
 }
@@ -102,7 +102,7 @@ draw_filled_rectangle(mrb_state *mrb, mrb_value self)
   mrb_value c;
   ALLEGRO_COLOR *ac;
   mrb_get_args(mrb, "ffffo", &x1, &y1, &x2, &y2, &c);
-  Data_Get_Struct(mrb, c, &color_data_type, ac);
+  Data_Get_Struct(mrb, c, &mrbal_color_data_type, ac);
   al_draw_filled_rectangle(x1, y1, x2, y2, *ac);
   return mrb_nil_value();
 }
@@ -120,7 +120,7 @@ draw_rounded_rectangle(mrb_state *mrb, mrb_value self)
   mrb_float thickness;
   ALLEGRO_COLOR *ac;
   mrb_get_args(mrb, "ffffffof", &x1, &y1, &x2, &y2, &rx, &ry, &c, &thickness);
-  Data_Get_Struct(mrb, c, &color_data_type, ac);
+  Data_Get_Struct(mrb, c, &mrbal_color_data_type, ac);
   al_draw_rounded_rectangle(x1, y1, x2, y2, rx, ry, *ac, thickness);
   return mrb_nil_value();
 }
@@ -137,7 +137,7 @@ draw_filled_rounded_rectangle(mrb_state *mrb, mrb_value self)
   mrb_value c;
   ALLEGRO_COLOR *ac;
   mrb_get_args(mrb, "ffffffo", &x1, &y1, &x2, &y2, &rx, &ry, &c);
-  Data_Get_Struct(mrb, c, &color_data_type, ac);
+  Data_Get_Struct(mrb, c, &mrbal_color_data_type, ac);
   al_draw_filled_rounded_rectangle(x1, y1, x2, y2, rx, ry, *ac);
   return mrb_nil_value();
 }
@@ -154,7 +154,7 @@ draw_pieslice(mrb_state *mrb, mrb_value self)
   mrb_float thickness;
   ALLEGRO_COLOR *ac;
   mrb_get_args(mrb, "fffffof", &cx, &cy, &r, &start_theta, &delta_theta, &c, &thickness);
-  Data_Get_Struct(mrb, c, &color_data_type, ac);
+  Data_Get_Struct(mrb, c, &mrbal_color_data_type, ac);
   al_draw_pieslice(cx, cy, r, start_theta, delta_theta, *ac, thickness);
   return mrb_nil_value();
 }
@@ -170,7 +170,7 @@ draw_filled_pieslice(mrb_state *mrb, mrb_value self)
   mrb_value c;
   ALLEGRO_COLOR *ac;
   mrb_get_args(mrb, "fffffo", &cx, &cy, &r, &start_theta, &delta_theta, &c);
-  Data_Get_Struct(mrb, c, &color_data_type, ac);
+  Data_Get_Struct(mrb, c, &mrbal_color_data_type, ac);
   al_draw_filled_pieslice(cx, cy, r, start_theta, delta_theta, *ac);
   return mrb_nil_value();
 }
@@ -185,7 +185,7 @@ draw_circle(mrb_state *mrb, mrb_value self)
   mrb_float thickness;
   ALLEGRO_COLOR *ac;
   mrb_get_args(mrb, "fffof", &cx, &cy, &r, &c, &thickness);
-  Data_Get_Struct(mrb, c, &color_data_type, ac);
+  Data_Get_Struct(mrb, c, &mrbal_color_data_type, ac);
   al_draw_circle(cx, cy, r, *ac, thickness);
   return mrb_nil_value();
 }
@@ -199,7 +199,7 @@ draw_filled_circle(mrb_state *mrb, mrb_value self)
   mrb_value c;
   ALLEGRO_COLOR *ac;
   mrb_get_args(mrb, "fffo", &cx, &cy, &r, &c);
-  Data_Get_Struct(mrb, c, &color_data_type, ac);
+  Data_Get_Struct(mrb, c, &mrbal_color_data_type, ac);
   al_draw_filled_circle(cx, cy, r, *ac);
   return mrb_nil_value();
 }
@@ -216,7 +216,7 @@ draw_arc(mrb_state *mrb, mrb_value self)
   mrb_float thickness;
   ALLEGRO_COLOR *ac;
   mrb_get_args(mrb, "fffffof", &cx, &cy, &r, &start_theta, &delta_theta, &c, &thickness);
-  Data_Get_Struct(mrb, c, &color_data_type, ac);
+  Data_Get_Struct(mrb, c, &mrbal_color_data_type, ac);
   al_draw_arc(cx, cy, r, start_theta, delta_theta, *ac, thickness);
   return mrb_nil_value();
 }
@@ -234,7 +234,7 @@ draw_elliptical_arc(mrb_state *mrb, mrb_value self)
   mrb_float thickness;
   ALLEGRO_COLOR *ac;
   mrb_get_args(mrb, "ffffffof", &cx, &cy, &rx, &ry, &start_theta, &delta_theta, &c, &thickness);
-  Data_Get_Struct(mrb, c, &color_data_type, ac);
+  Data_Get_Struct(mrb, c, &mrbal_color_data_type, ac);
   al_draw_elliptical_arc(cx, cy, rx, ry, start_theta, delta_theta, *ac, thickness);
   return mrb_nil_value();
 }
@@ -250,7 +250,7 @@ draw_ellipse(mrb_state *mrb, mrb_value self)
   mrb_float thickness;
   ALLEGRO_COLOR *ac;
   mrb_get_args(mrb, "ffffof", &cx, &cy, &rx, &ry, &c, &thickness);
-  Data_Get_Struct(mrb, c, &color_data_type, ac);
+  Data_Get_Struct(mrb, c, &mrbal_color_data_type, ac);
   al_draw_ellipse(cx, cy, rx, ry, *ac, thickness);
   return mrb_nil_value();
 }
@@ -265,7 +265,7 @@ draw_filled_ellipse(mrb_state *mrb, mrb_value self)
   mrb_value c;
   ALLEGRO_COLOR *ac;
   mrb_get_args(mrb, "ffffo", &cx, &cy, &rx, &ry, &c);
-  Data_Get_Struct(mrb, c, &color_data_type, ac);
+  Data_Get_Struct(mrb, c, &mrbal_color_data_type, ac);
   al_draw_filled_ellipse(cx, cy, rx, ry, *ac);
   return mrb_nil_value();
 }
@@ -280,7 +280,7 @@ draw_spline(mrb_state *mrb, mrb_value self)
   ALLEGRO_COLOR *ac;
   size_t i;
   mrb_get_args(mrb, "ffffffffof", &f[0], &f[1], &f[2], &f[3], &f[4], &f[5], &f[6], &f[7], &c, &thickness);
-  Data_Get_Struct(mrb, c, &color_data_type, ac);
+  Data_Get_Struct(mrb, c, &mrbal_color_data_type, ac);
   for (i = 0; i < 8; ++i) {
     points[i] = f[i];
   }

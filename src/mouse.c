@@ -40,7 +40,7 @@ set_z(mrb_state *mrb, mrb_value self)
 {
   mrb_int z;
   mrb_get_args(mrb, "i", &z);
-  return mrb_bool_value(al_set_mouse_z(clamp_int(z)));
+  return mrb_bool_value(al_set_mouse_z(mrbal_clamp_int(z)));
 }
 
 static mrb_value
@@ -48,7 +48,7 @@ set_w(mrb_state *mrb, mrb_value self)
 {
   mrb_int w;
   mrb_get_args(mrb, "i", &w);
-  return mrb_bool_value(al_set_mouse_w(clamp_int(w)));
+  return mrb_bool_value(al_set_mouse_w(mrbal_clamp_int(w)));
 }
 
 static mrb_value
@@ -57,7 +57,7 @@ set_axis(mrb_state *mrb, mrb_value self)
   mrb_int which;
   mrb_int value;
   mrb_get_args(mrb, "ii", &which, &value);
-  return mrb_bool_value(al_set_mouse_axis(clamp_int(which), clamp_int(value)));
+  return mrb_bool_value(al_set_mouse_axis(mrbal_clamp_int(which), mrbal_clamp_int(value)));
 }
 
 static mrb_value
@@ -67,7 +67,7 @@ event_source(mrb_state *mrb, mrb_value self)
   if (!es) {
     mrb_raise(mrb, E_ALLEGRO_ERROR, "mouse subsystem is not installed");
   }
-  return mrb_obj_value(Data_Wrap_Struct(mrb, C_ALLEGRO_EVENTSOURCE, &eventsource_data_type, es));
+  return mrb_obj_value(Data_Wrap_Struct(mrb, C_ALLEGRO_EVENTSOURCE, &mrbal_eventsource_data_type, es));
 }
 
 static mrb_value
