@@ -218,8 +218,8 @@ mruby_allegro_font_init(mrb_state *mrb)
   struct RClass *am = M_ALLEGRO;
   struct RClass *fc = mrb_define_class_under(mrb, am, "Font", mrb->object_class);
   MRB_SET_INSTANCE_TT(fc, MRB_TT_DATA);
-  mrb_define_module_function(mrb, am, "init_font_addon", font_addon_version, MRB_ARGS_NONE());
-  mrb_define_module_function(mrb, am, "shutdown_font_addon", font_addon_version, MRB_ARGS_NONE());
+  mrb_define_module_function(mrb, am, "init_font_addon", font_addon_init, MRB_ARGS_NONE());
+  mrb_define_module_function(mrb, am, "shutdown_font_addon", font_addon_shutdown, MRB_ARGS_NONE());
   mrb_define_alias(mrb, fc->c, "load", "new");
   mrb_define_method(mrb, fc, "initialize", initialize, MRB_ARGS_REQ(2));
   mrb_define_method(mrb, fc, "destroy", destroy, MRB_ARGS_NONE());

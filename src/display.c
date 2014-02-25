@@ -215,6 +215,7 @@ mruby_allegro_display_init(mrb_state *mrb)
   mrb_define_class_method(mrb, am, "wait_for_vsync", wait_for_vsync, MRB_ARGS_NONE());
   mrb_define_method(mrb, dc, "height", height_getter, MRB_ARGS_NONE());
   mrb_define_method(mrb, dc, "width", width_getter, MRB_ARGS_NONE());
+  mrb_define_method(mrb, dc, "icon=", icon_setter, MRB_ARGS_REQ(1));
   mrb_define_method(mrb, dc, "window_position", window_position_getter, MRB_ARGS_NONE());
   mrb_define_class_method(mrb, am, "inhibit_screensaver=", inhibit_screensaver_setter, MRB_ARGS_REQ(1));
   mrb_define_method(mrb, dc, "resize", resize, MRB_ARGS_REQ(2));
