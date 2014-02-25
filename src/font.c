@@ -122,6 +122,9 @@ draw_text(mrb_state *mrb, mrb_value self)
     if (alignment == mrb_intern_lit(mrb, "center")) {
       flags |= ALLEGRO_ALIGN_CENTER;
     }
+    else if (alignment == mrb_intern_lit(mrb, "centre")) {
+      flags |= ALLEGRO_ALIGN_CENTRE;
+    }
     else if (alignment == mrb_intern_lit(mrb, "right")) {
       flags |= ALLEGRO_ALIGN_RIGHT;
     }
