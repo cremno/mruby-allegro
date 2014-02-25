@@ -4,6 +4,7 @@
 void
 consts_init(mrb_state *mrb)
 {
+  //
   mrb_define_global_const(mrb, "ALLEGRO_EVENT_JOYSTICK_AXIS", mrb_fixnum_value(ALLEGRO_EVENT_JOYSTICK_AXIS));
   mrb_define_global_const(mrb, "ALLEGRO_EVENT_JOYSTICK_BUTTON_DOWN", mrb_fixnum_value(ALLEGRO_EVENT_JOYSTICK_BUTTON_DOWN));
   mrb_define_global_const(mrb, "ALLEGRO_EVENT_JOYSTICK_BUTTON_UP", mrb_fixnum_value(ALLEGRO_EVENT_JOYSTICK_BUTTON_UP));
@@ -26,7 +27,7 @@ consts_init(mrb_state *mrb)
   mrb_define_global_const(mrb, "ALLEGRO_EVENT_DISPLAY_SWITCH_IN", mrb_fixnum_value(ALLEGRO_EVENT_DISPLAY_SWITCH_IN));
   mrb_define_global_const(mrb, "ALLEGRO_EVENT_DISPLAY_SWITCH_OUT", mrb_fixnum_value(ALLEGRO_EVENT_DISPLAY_SWITCH_OUT));
   mrb_define_global_const(mrb, "ALLEGRO_EVENT_DISPLAY_ORIENTATION", mrb_fixnum_value(ALLEGRO_EVENT_DISPLAY_ORIENTATION));
-
+  //
   mrb_define_global_const(mrb, "ALLEGRO_KEY_A", mrb_fixnum_value(ALLEGRO_KEY_A));
   mrb_define_global_const(mrb, "ALLEGRO_KEY_B", mrb_fixnum_value(ALLEGRO_KEY_B));
   mrb_define_global_const(mrb, "ALLEGRO_KEY_C", mrb_fixnum_value(ALLEGRO_KEY_C));
@@ -147,6 +148,8 @@ consts_init(mrb_state *mrb)
   mrb_define_global_const(mrb, "ALLEGRO_KEY_SCROLLLOCK", mrb_fixnum_value(ALLEGRO_KEY_SCROLLLOCK));
   mrb_define_global_const(mrb, "ALLEGRO_KEY_NUMLOCK", mrb_fixnum_value(ALLEGRO_KEY_NUMLOCK));
   mrb_define_global_const(mrb, "ALLEGRO_KEY_CAPSLOCK", mrb_fixnum_value(ALLEGRO_KEY_CAPSLOCK));
+  mrb_define_global_const(mrb, "ALLEGRO_KEY_MAX", mrb_fixnum_value(ALLEGRO_KEY_MAX));
+  //
   mrb_define_global_const(mrb, "ALLEGRO_KEYMOD_SHIFT", mrb_fixnum_value(ALLEGRO_KEYMOD_SHIFT));
   mrb_define_global_const(mrb, "ALLEGRO_KEYMOD_CTRL", mrb_fixnum_value(ALLEGRO_KEYMOD_CTRL));
   mrb_define_global_const(mrb, "ALLEGRO_KEYMOD_ALT", mrb_fixnum_value(ALLEGRO_KEYMOD_ALT));
@@ -163,21 +166,26 @@ consts_init(mrb_state *mrb)
   mrb_define_global_const(mrb, "ALLEGRO_KEYMOD_ACCENT2", mrb_fixnum_value(ALLEGRO_KEYMOD_ACCENT2));
   mrb_define_global_const(mrb, "ALLEGRO_KEYMOD_ACCENT3", mrb_fixnum_value(ALLEGRO_KEYMOD_ACCENT3));
   mrb_define_global_const(mrb, "ALLEGRO_KEYMOD_ACCENT4", mrb_fixnum_value(ALLEGRO_KEYMOD_ACCENT4));
-
+  //
   mrb_define_global_const(mrb, "ALLEGRO_LOCK_READWRITE", mrb_fixnum_value(ALLEGRO_LOCK_READWRITE));
   mrb_define_global_const(mrb, "ALLEGRO_LOCK_READONLY", mrb_fixnum_value(ALLEGRO_LOCK_READONLY));
   mrb_define_global_const(mrb, "ALLEGRO_LOCK_WRITEONLY", mrb_fixnum_value(ALLEGRO_LOCK_WRITEONLY));
-
+  // ALLEGRO_BLEND_MODE
   mrb_define_global_const(mrb, "ALLEGRO_ZERO", mrb_fixnum_value(ALLEGRO_ZERO));
   mrb_define_global_const(mrb, "ALLEGRO_ONE", mrb_fixnum_value(ALLEGRO_ONE));
   mrb_define_global_const(mrb, "ALLEGRO_ALPHA", mrb_fixnum_value(ALLEGRO_ALPHA));
   mrb_define_global_const(mrb, "ALLEGRO_INVERSE_ALPHA", mrb_fixnum_value(ALLEGRO_INVERSE_ALPHA));
-
+  mrb_define_global_const(mrb, "ALLEGRO_SRC_COLOR", mrb_fixnum_value(ALLEGRO_SRC_COLOR));
+  mrb_define_global_const(mrb, "ALLEGRO_DEST_COLOR", mrb_fixnum_value(ALLEGRO_DEST_COLOR));
+  mrb_define_global_const(mrb, "ALLEGRO_INVERSE_SRC_COLOR", mrb_fixnum_value(ALLEGRO_INVERSE_SRC_COLOR));
+  mrb_define_global_const(mrb, "ALLEGRO_INVERSE_DEST_COLOR", mrb_fixnum_value(ALLEGRO_INVERSE_DEST_COLOR));
+  mrb_define_global_const(mrb, "ALLEGRO_NUM_BLEND_MODES", mrb_fixnum_value(ALLEGRO_NUM_BLEND_MODES));
+  // ALLEGRO_BLEND_OPERATIONS
   mrb_define_global_const(mrb, "ALLEGRO_ADD", mrb_fixnum_value(ALLEGRO_ADD));
   mrb_define_global_const(mrb, "ALLEGRO_SRC_MINUS_DEST", mrb_fixnum_value(ALLEGRO_SRC_MINUS_DEST));
   mrb_define_global_const(mrb, "ALLEGRO_SRC_MINUS_DEST", mrb_fixnum_value(ALLEGRO_DEST_MINUS_SRC));
   mrb_define_global_const(mrb, "ALLEGRO_NUM_BLEND_OPERATIONS", mrb_fixnum_value(ALLEGRO_NUM_BLEND_OPERATIONS));
-
+  //
   mrb_define_global_const(mrb, "ALLEGRO_WINDOWED", mrb_fixnum_value(ALLEGRO_WINDOWED));
   mrb_define_global_const(mrb, "ALLEGRO_FULLSCREEN", mrb_fixnum_value(ALLEGRO_FULLSCREEN));
   mrb_define_global_const(mrb, "ALLEGRO_OPENGL", mrb_fixnum_value(ALLEGRO_OPENGL));
@@ -190,7 +198,7 @@ consts_init(mrb_state *mrb)
   mrb_define_global_const(mrb, "ALLEGRO_OPENGL_FORWARD_COMPATIBLE", mrb_fixnum_value(ALLEGRO_OPENGL_FORWARD_COMPATIBLE));
   mrb_define_global_const(mrb, "ALLEGRO_FULLSCREEN_WINDOW", mrb_fixnum_value(ALLEGRO_FULLSCREEN_WINDOW));
   mrb_define_global_const(mrb, "ALLEGRO_MINIMIZED", mrb_fixnum_value(ALLEGRO_MINIMIZED));
-
+  // ALLEGRO_DISPLAY_OPTIONS
   mrb_define_global_const(mrb, "ALLEGRO_RED_SIZE", mrb_fixnum_value(ALLEGRO_RED_SIZE));
   mrb_define_global_const(mrb, "ALLEGRO_GREEN_SIZE", mrb_fixnum_value(ALLEGRO_GREEN_SIZE));
   mrb_define_global_const(mrb, "ALLEGRO_BLUE_SIZE", mrb_fixnum_value(ALLEGRO_BLUE_SIZE));
@@ -223,11 +231,11 @@ consts_init(mrb_state *mrb)
   mrb_define_global_const(mrb, "ALLEGRO_CAN_DRAW_INTO_BITMAP", mrb_fixnum_value(ALLEGRO_CAN_DRAW_INTO_BITMAP));
   mrb_define_global_const(mrb, "ALLEGRO_SUPPORT_SEPARATE_ALPHA", mrb_fixnum_value(ALLEGRO_SUPPORT_SEPARATE_ALPHA));
   mrb_define_global_const(mrb, "ALLEGRO_DISPLAY_OPTIONS_COUNT", mrb_fixnum_value(ALLEGRO_DISPLAY_OPTIONS_COUNT));
-
+  //
   mrb_define_global_const(mrb, "ALLEGRO_DONTCARE", mrb_fixnum_value(ALLEGRO_DONTCARE));
   mrb_define_global_const(mrb, "ALLEGRO_REQUIRE", mrb_fixnum_value(ALLEGRO_REQUIRE));
   mrb_define_global_const(mrb, "ALLEGRO_SUGGEST", mrb_fixnum_value(ALLEGRO_SUGGEST));
-
+  // ALLEGRO_DISPLAY_ORIENTATION
   mrb_define_global_const(mrb, "ALLEGRO_DISPLAY_ORIENTATION_0_DEGREES", mrb_fixnum_value(ALLEGRO_DISPLAY_ORIENTATION_0_DEGREES));
   mrb_define_global_const(mrb, "ALLEGRO_DISPLAY_ORIENTATION_90_DEGREES", mrb_fixnum_value(ALLEGRO_DISPLAY_ORIENTATION_90_DEGREES));
   mrb_define_global_const(mrb, "ALLEGRO_DISPLAY_ORIENTATION_180_DEGREES", mrb_fixnum_value(ALLEGRO_DISPLAY_ORIENTATION_180_DEGREES));
