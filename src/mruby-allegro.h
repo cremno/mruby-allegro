@@ -1,16 +1,20 @@
 #ifndef MRUBY_ALLEGRO_H
 #define MRUBY_ALLEGRO_H
 
-#define M_ALLEGRO (mrb_module_get(mrb, "Al"))
-#define E_ALLEGRO_ERROR (mrb_class_get(mrb, "AllegroError"))
-#define C_ALLEGRO_BITMAP (mrbal_get_const(mrb, "Bitmap"))
-#define C_ALLEGRO_COLOR (mrbal_get_const(mrb, "Color"))
-#define C_ALLEGRO_CONFIG (mrbal_get_const(mrb, "Config"))
-#define C_ALLEGRO_DISPLAY (mrbal_get_const(mrb, "Display"))
-#define C_ALLEGRO_EVENT (mrbal_get_const(mrb, "Event"))
+#ifdef MRB_INT16
+#error "MRB_INT16 is not supported"
+#endif
+
+#define M_ALLEGRO             (mrb_module_get(mrb, "Al"))
+#define E_ALLEGRO_ERROR       (mrb_class_get(mrb, "AllegroError"))
+#define C_ALLEGRO_BITMAP      (mrbal_get_const(mrb, "Bitmap"))
+#define C_ALLEGRO_COLOR       (mrbal_get_const(mrb, "Color"))
+#define C_ALLEGRO_CONFIG      (mrbal_get_const(mrb, "Config"))
+#define C_ALLEGRO_DISPLAY     (mrbal_get_const(mrb, "Display"))
+#define C_ALLEGRO_EVENT       (mrbal_get_const(mrb, "Event"))
 #define C_ALLEGRO_EVENTSOURCE (mrbal_get_const(mrb, "EventSource"))
-#define C_ALLEGRO_EVENTQUEUE (mrbal_get_const(mrb, "EventQueue"))
-#define C_ALLEGRO_FONT (mrbal_get_const(mrb, "Font"))
+#define C_ALLEGRO_EVENTQUEUE  (mrbal_get_const(mrb, "EventQueue"))
+#define C_ALLEGRO_FONT        (mrbal_get_const(mrb, "Font"))
 
 #define Check_Destroyed(mrb, obj, t, sval) do {                \
   Data_Get_Struct(mrb, obj, &mrbal_ ## t ## _data_type, sval); \
@@ -34,6 +38,9 @@ struct RClass *mrbal_get_const(mrb_state *, char const *);
 mrb_value mrbal_version_to_hash(mrb_state *, uint32_t);
 unsigned char mrbal_clamp_uc(mrb_int);
 int mrbal_clamp_int(mrb_int);
+#ifndef MRB_INT64
+#define mrbal_clamp_int(i) (i)
+#endif
 float mrbal_clamp_f(mrb_float);
 int mrbal_bitmap_get_flags(mrb_state *, unsigned, mrb_sym, mrb_sym);
 

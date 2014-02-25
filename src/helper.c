@@ -39,10 +39,10 @@ mrbal_clamp_uc(mrb_int i)
 }
 
 int
-mrbal_clamp_int(mrb_int i)
+(mrbal_clamp_int)(mrb_int i)
 {
   if (sizeof(int) <= sizeof(mrb_int)) {
-  	return i;
+    return i;
   }
   else {
     if (i > INT_MAX) {
