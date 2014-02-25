@@ -130,11 +130,10 @@ static mrb_value
 icon_setter(mrb_state *mrb, mrb_value self)
 {
   ALLEGRO_DISPLAY *d;
-  mrb_value o;
   ALLEGRO_BITMAP *b;
   Check_Destroyed(mrb, self, display, d);
-  mrb_get_args(mrb, "o", &o);
-  Check_Destroyed(mrb, o, bitmap, b);
+  mrb_get_args(mrb, "d", &b, &mrbal_bitmap_data_type);
+  Check_Destroyed2(mrb, bitmap, b);
   al_set_display_icon(d, b);
   return mrb_nil_value();
 }

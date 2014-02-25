@@ -92,18 +92,15 @@ descent(mrb_state *mrb, mrb_value self)
 static mrb_value
 text_width(mrb_state *mrb, mrb_value self)
 {
-  mrb_value o;
   ALLEGRO_FONT *f;
-  mrb_get_args(mrb, "o", &o);
-  Check_Destroyed(mrb, o, font, f);
+  mrb_get_args(mrb, "d", &f, &mrbal_font_data_type);
+  Check_Destroyed2(mrb, font, f);
   return mrb_fixnum_value(al_get_text_width(f, RSTRING_PTR(self)));
 }
 
 static mrb_value
 draw_text(mrb_state *mrb, mrb_value self)
 {
-  mrb_value of;
-  mrb_value oc;
   mrb_float x;
   mrb_float y;
   char *s;
@@ -112,7 +109,7 @@ draw_text(mrb_state *mrb, mrb_value self)
   ALLEGRO_FONT *f;
   ALLEGRO_COLOR *c;
   int flags = 0;
-  switch (mrb_get_args(mrb, "ooffz|nn", &of, &oc, &x, &y, &s, &alignment, &integer)) {
+  switch (mrb_get_args(mrb, "ddffz|nn", &f, &mrbal_font_data_type, &c, &mrbal_color_data_type, &x, &y, &s, &alignment, &integer)) {
   case 6:
     if (integer == mrb_intern_lit(mrb, "integer")) {
       flags |= ALLEGRO_ALIGN_INTEGER;
@@ -135,8 +132,7 @@ draw_text(mrb_state *mrb, mrb_value self)
   default:
     break;
   }
-  Check_Destroyed(mrb, of, font, f);
-  Data_Get_Struct(mrb, oc, &mrbal_color_data_type, c);
+  Check_Destroyed2(mrb, font, f);
   al_draw_text(f, *c, x, y, flags, s);
   return mrb_nil_value();
 }
@@ -144,8 +140,6 @@ draw_text(mrb_state *mrb, mrb_value self)
 static mrb_value
 draw_justified_text(mrb_state *mrb, mrb_value self)
 {
-  mrb_value of;
-  mrb_value oc;
   mrb_float x1;
   mrb_float x2;
   mrb_float y;
@@ -155,13 +149,12 @@ draw_justified_text(mrb_state *mrb, mrb_value self)
   ALLEGRO_FONT *f;
   ALLEGRO_COLOR *c;
   int flags = 0;
-  if (mrb_get_args(mrb, "ooffffz|n", &of, &oc, &x1, &x2, &y, &diff, &s, &integer) == 7) {
+  if (mrb_get_args(mrb, "ddffffz|n", &f, &mrbal_font_data_type, &c, &mrbal_color_data_type, &x1, &x2, &y, &diff, &s, &integer) == 7) {
     if (integer == mrb_intern_lit(mrb, "integer")) {
       flags |= ALLEGRO_ALIGN_INTEGER;
     }
   }
-  Check_Destroyed(mrb, of, font, f);
-  Data_Get_Struct(mrb, oc, &mrbal_color_data_type, c);
+  Check_Destroyed2(mrb, font, f);
   al_draw_justified_text(f, *c, x1, x2, y, diff, flags, s);
   return mrb_nil_value();
 }

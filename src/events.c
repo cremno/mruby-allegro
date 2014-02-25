@@ -129,11 +129,9 @@ static mrb_value
 eventqueue_register(mrb_state *mrb, mrb_value self)
 {
   ALLEGRO_EVENT_QUEUE* eq;
-  mrb_value o;
   ALLEGRO_EVENT_SOURCE *es;
   Check_Destroyed(mrb, self, eventqueue, eq);
-  mrb_get_args(mrb, "o", &o);
-  Data_Get_Struct(mrb, o, &mrbal_eventsource_data_type, es);
+  mrb_get_args(mrb, "d", &es, &mrbal_eventsource_data_type);
   al_register_event_source(eq, es);
   return mrb_nil_value();
 }
@@ -142,11 +140,9 @@ static mrb_value
 eventqueue_unregister(mrb_state *mrb, mrb_value self)
 {
   ALLEGRO_EVENT_QUEUE* eq;
-  mrb_value o;
   ALLEGRO_EVENT_SOURCE *es;
   Check_Destroyed(mrb, self, eventqueue, eq);
-  mrb_get_args(mrb, "o", &o);
-  Data_Get_Struct(mrb, o, &mrbal_eventsource_data_type, es);
+  mrb_get_args(mrb, "d", &es, &mrbal_eventsource_data_type);
   al_unregister_event_source(eq, es);
   return mrb_nil_value();
 }

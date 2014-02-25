@@ -23,6 +23,12 @@
   }                                                            \
 } while(0)
 
+#define Check_Destroyed2(mrb, t, sval) do {              \
+  if (!sval) {                                           \
+    mrb_raise(mrb, E_ALLEGRO_ERROR, #t " is destroyed"); \
+  }                                                      \
+} while(0)
+
 #define Destroyed(o) (mrb_bool_value(!DATA_PTR(o)))
 
 extern struct mrb_data_type const mrbal_bitmap_data_type;
