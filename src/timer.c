@@ -12,7 +12,7 @@ timer_free(mrb_state *mrb, void *p)
   }
 }
 
-struct mrb_data_type timer_data_type = { "allegro/timer", timer_free };
+struct mrb_data_type const timer_data_type = { "allegro/timer", timer_free };
 
 static mrb_value
 initialize(mrb_state *mrb, mrb_value self)
@@ -77,7 +77,7 @@ speed_getter(mrb_state *mrb, mrb_value self)
 {
   ALLEGRO_TIMER *t;
   Check_Destroyed(mrb, self, timer, t);
-  return mrb_float_value(al_get_timer_speed(t));
+  return mrb_float_value(mrb, al_get_timer_speed(t));
 }
 
 static mrb_value
@@ -88,7 +88,7 @@ speed_setter(mrb_state *mrb, mrb_value self)
   Check_Destroyed(mrb, self, timer, t);
   mrb_get_args(mrb, "f", &new_speed_secs);
   al_set_timer_speed(t, new_speed_secs);
-  return mrb_float_value(new_speed_secs);
+  return mrb_float_value(mrb, new_speed_secs);
 }
 
 static mrb_value
@@ -108,13 +108,13 @@ mruby_allegro_timer_init(mrb_state *mrb)
   struct RClass *tc = mrb_define_class_under(mrb, am, "Timer", mrb->object_class);
   MRB_SET_INSTANCE_TT(tc, MRB_TT_DATA);
   mrb_define_alias(mrb, tc->c, "create", "new");
-  mrb_define_method(mrb, tc, "initialize", initialize, ARGS_REQ(1));
-  mrb_define_method(mrb, tc, "start", start, ARGS_NONE());
-  mrb_define_method(mrb, tc, "stop", stop, ARGS_NONE());
-  mrb_define_method(mrb, tc, "started?", started, ARGS_NONE());
-  mrb_define_method(mrb, tc, "destroy", destroy, ARGS_NONE());
-  mrb_define_method(mrb, tc, "destroyed?", destroyed, ARGS_NONE());
-  mrb_define_method(mrb, tc, "speed", speed_getter, ARGS_NONE());
-  mrb_define_method(mrb, tc, "speed=", speed_setter, ARGS_REQ(1));
-  mrb_define_method(mrb, tc, "event_source", event_source, ARGS_NONE());
+  mrb_define_method(mrb, tc, "initialize", initialize, MRB_ARGS_REQ(1));
+  mrb_define_method(mrb, tc, "start", start, MRB_ARGS_NONE());
+  mrb_define_method(mrb, tc, "stop", stop, MRB_ARGS_NONE());
+  mrb_define_method(mrb, tc, "started?", started, MRB_ARGS_NONE());
+  mrb_define_method(mrb, tc, "destroy", destroy, MRB_ARGS_NONE());
+  mrb_define_method(mrb, tc, "destroyed?", destroyed, MRB_ARGS_NONE());
+  mrb_define_method(mrb, tc, "speed", speed_getter, MRB_ARGS_NONE());
+  mrb_define_method(mrb, tc, "speed=", speed_setter, MRB_ARGS_REQ(1));
+  mrb_define_method(mrb, tc, "event_source", event_source, MRB_ARGS_NONE());
 }

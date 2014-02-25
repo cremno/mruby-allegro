@@ -38,8 +38,8 @@ mruby_allegro_keyboard_init(mrb_state *mrb)
 {
   struct RClass *am = M_ALLEGRO;
   struct RClass *km = mrb_define_module_under(mrb, am, "Keyboard");
-  mrb_define_class_method(mrb, km, "install", install, ARGS_NONE());
-  mrb_define_class_method(mrb, km, "installed?", installed, ARGS_NONE());
-  mrb_define_class_method(mrb, km, "uninstall", uninstall, ARGS_NONE());
-  mrb_define_class_method(mrb, km, "event_source", event_source, ARGS_NONE());
+  mrb_define_class_method(mrb, km, "install", install, MRB_ARGS_NONE());
+  mrb_define_class_method(mrb, km, "installed?", installed, MRB_ARGS_NONE());
+  mrb_define_class_method(mrb, km, "uninstall", uninstall, MRB_ARGS_NONE());
+  mrb_define_class_method(mrb, km, "event_source", event_source, MRB_ARGS_NONE());
 }

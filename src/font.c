@@ -29,7 +29,7 @@ font_free(mrb_state *mrb, void *p)
   }
 }
 
-struct mrb_data_type font_data_type = { "allegro/font", font_free };
+struct mrb_data_type const font_data_type = { "allegro/font", font_free };
 
 static mrb_value
 initialize(mrb_state *mrb, mrb_value self)
@@ -114,16 +114,18 @@ draw_text(mrb_state *mrb, mrb_value self)
   int flags = 0;
   switch (mrb_get_args(mrb, "ooffz|nn", &of, &oc, &x, &y, &s, &alignment, &integer)) {
   case 6:
-    if (integer == mrb_intern2(mrb, "integer", 7)) {
+    if (integer == mrb_intern_lit(mrb, "integer")) {
       flags |= ALLEGRO_ALIGN_INTEGER;
     }
     // FALL TROUGH
   case 5:
-    if (alignment == mrb_intern2(mrb, "center", 6)) {
+    if (alignment == mrb_intern_lit(mrb, "center")) {
       flags |= ALLEGRO_ALIGN_CENTER;
-    } else if (alignment == mrb_intern2(mrb, "right", 5)) {
+    }
+    else if (alignment == mrb_intern_lit(mrb, "right")) {
       flags |= ALLEGRO_ALIGN_RIGHT;
-    } else if (alignment == mrb_intern2(mrb, "left", 4)) {
+    }
+    else if (alignment == mrb_intern_lit(mrb, "left")) {
       flags |= ALLEGRO_ALIGN_LEFT;
     }
     break;
@@ -151,7 +153,7 @@ draw_justified_text(mrb_state *mrb, mrb_value self)
   ALLEGRO_COLOR *c;
   int flags = 0;
   if (mrb_get_args(mrb, "ooffffz|n", &of, &oc, &x1, &x2, &y, &diff, &s, &integer) == 7) {
-    if (integer == mrb_intern2(mrb, "integer", 7)) {
+    if (integer == mrb_intern_lit(mrb, "integer")) {
       flags |= ALLEGRO_ALIGN_INTEGER;
     }
   }
@@ -215,24 +217,23 @@ mruby_allegro_font_init(mrb_state *mrb)
 {
   struct RClass *am = M_ALLEGRO;
   struct RClass *fc = mrb_define_class_under(mrb, am, "Font", mrb->object_class);
-  struct RClass *sc = mrb_class_obj_get(mrb, "String");
   MRB_SET_INSTANCE_TT(fc, MRB_TT_DATA);
-  mrb_define_module_function(mrb, am, "init_font_addon", font_addon_version, ARGS_NONE());
-  mrb_define_module_function(mrb, am, "shutdown_font_addon", font_addon_version, ARGS_NONE());
+  mrb_define_module_function(mrb, am, "init_font_addon", font_addon_version, MRB_ARGS_NONE());
+  mrb_define_module_function(mrb, am, "shutdown_font_addon", font_addon_version, MRB_ARGS_NONE());
   mrb_define_alias(mrb, fc->c, "load", "new");
-  mrb_define_method(mrb, fc, "initialize", initialize, ARGS_REQ(2));
-  mrb_define_method(mrb, fc, "destroy", destroy, ARGS_NONE());
-  mrb_define_method(mrb, fc, "destroyed?", destroyed, ARGS_NONE());
-  mrb_define_method(mrb, fc, "line_height", line_height, ARGS_NONE());
-  mrb_define_method(mrb, fc, "ascent", ascent, ARGS_NONE());
-  mrb_define_method(mrb, fc, "descent", descent, ARGS_NONE());
-  mrb_define_method(mrb, sc, "text_width", text_width, ARGS_REQ(1));
-  mrb_define_module_function(mrb, am, "draw_text", draw_text, ARGS_REQ(5) | ARGS_OPT(2));
-  mrb_define_module_function(mrb, am, "draw_justified_text", draw_justified_text, ARGS_REQ(7) | ARGS_OPT(1));
-  mrb_define_module_function(mrb, am, "font_addon_version", font_addon_version, ARGS_NONE());
-  mrb_define_class_method(mrb, fc, "load_bitmap_font", load_bitmap, ARGS_REQ(1));
-  mrb_define_class_method(mrb, fc, "create_builtin_font", create_builtin, ARGS_NONE());
-  mrb_define_module_function(mrb, am, "ttf_addon_init", ttf_addon_init, ARGS_NONE());
-  mrb_define_module_function(mrb, am, "ttf_addon_shutdown", ttf_addon_shutdown, ARGS_NONE());
-  mrb_define_module_function(mrb, am, "ttf_addon_version", ttf_addon_version, ARGS_NONE());
+  mrb_define_method(mrb, fc, "initialize", initialize, MRB_ARGS_REQ(2));
+  mrb_define_method(mrb, fc, "destroy", destroy, MRB_ARGS_NONE());
+  mrb_define_method(mrb, fc, "destroyed?", destroyed, MRB_ARGS_NONE());
+  mrb_define_method(mrb, fc, "line_height", line_height, MRB_ARGS_NONE());
+  mrb_define_method(mrb, fc, "ascent", ascent, MRB_ARGS_NONE());
+  mrb_define_method(mrb, fc, "descent", descent, MRB_ARGS_NONE());
+  mrb_define_method(mrb, mrb->string_class, "text_width", text_width, MRB_ARGS_REQ(1));
+  mrb_define_module_function(mrb, am, "draw_text", draw_text, MRB_ARGS_REQ(5) | MRB_ARGS_OPT(2));
+  mrb_define_module_function(mrb, am, "draw_justified_text", draw_justified_text, MRB_ARGS_REQ(7) | MRB_ARGS_OPT(1));
+  mrb_define_module_function(mrb, am, "font_addon_version", font_addon_version, MRB_ARGS_NONE());
+  mrb_define_class_method(mrb, fc, "load_bitmap_font", load_bitmap, MRB_ARGS_REQ(1));
+  mrb_define_class_method(mrb, fc, "create_builtin_font", create_builtin, MRB_ARGS_NONE());
+  mrb_define_module_function(mrb, am, "ttf_addon_init", ttf_addon_init, MRB_ARGS_NONE());
+  mrb_define_module_function(mrb, am, "ttf_addon_shutdown", ttf_addon_shutdown, MRB_ARGS_NONE());
+  mrb_define_module_function(mrb, am, "ttf_addon_version", ttf_addon_version, MRB_ARGS_NONE());
 }

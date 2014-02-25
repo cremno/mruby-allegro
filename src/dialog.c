@@ -47,7 +47,7 @@ mruby_allegro_dialog_init(mrb_state *mrb)
 {
   struct RClass *am = M_ALLEGRO;
   struct RClass *dc = C_ALLEGRO_DISPLAY;
-  mrb_define_method(mrb, dc, "msgbox", display_msgbox, ARGS_REQ(2) | ARGS_OPT(2));
-  mrb_define_module_function(mrb, mrb->kernel_module, "msgbox", global_msgbox, ARGS_REQ(1) | ARGS_OPT(3));
-  mrb_define_class_method(mrb, am, "native_dialog_version", version, ARGS_NONE());
+  mrb_define_method(mrb, dc, "msgbox", display_msgbox, MRB_ARGS_REQ(2) | MRB_ARGS_OPT(2));
+  mrb_define_module_function(mrb, mrb->kernel_module, "msgbox", global_msgbox, MRB_ARGS_REQ(1) | MRB_ARGS_OPT(3));
+  mrb_define_class_method(mrb, am, "native_dialog_version", version, MRB_ARGS_NONE());
 }

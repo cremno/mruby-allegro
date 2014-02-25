@@ -4,8 +4,8 @@ MRuby::Gem::Specification.new('mruby-allegro') do |spec|
 
   if ENV['OS'] == 'Windows_NT'
     spec.cc.defines << 'ALLEGRO_STATICLINK'
-    spec.linker.libraries << 'allegro-5.0.8-monolith-static-mt'
-    spec.linker.libraries << 'freetype-2.4.8-static-mt'
+    spec.linker.libraries << 'allegro-5.0.10-monolith-static-md'
+    spec.linker.libraries << 'freetype-2.4.8-static-md'
     spec.linker.libraries << %w(uuid gdiplus psapi shlwapi comdlg32 user32 ole32 gdi32 opengl32 glu32 shell32 winmm)
     if spec.cc.command.start_with? 'gcc'  # MinGW
       spec.linker.libraries << 'stdc++'
@@ -21,5 +21,5 @@ MRuby::Gem::Specification.new('mruby-allegro') do |spec|
   #spec.rbfiles = Dir.glob("#{dir}/llapi/*.rb")
 
   # this initializes allegro and its addons when this gem is initialized
-  spec.cc.defines << 'INIT_AT_START'
+  spec.cc.defines << 'MRUBY_ALLEGRO_AUTOINIT'
 end

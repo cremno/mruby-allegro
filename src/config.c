@@ -12,7 +12,7 @@ config_free(mrb_state *mrb, void *p)
   }
 }
 
-struct mrb_data_type config_data_type = { "allegro/config", config_free };
+struct mrb_data_type const config_data_type = { "allegro/config", config_free };
 
 static mrb_value
 config_create(mrb_state *mrb, mrb_value self)
@@ -73,7 +73,7 @@ config_save_file(mrb_state *mrb, mrb_value self)
   mrb_get_args(mrb, "z", &filename);
   if (!al_save_config_file(filename, cfg)) {
     mrb_raise(mrb, E_ALLEGRO_ERROR, "could not save config to file");
-    return mrb_false_value();  
+    return mrb_false_value();
   }
   return mrb_true_value();
 }
@@ -171,17 +171,17 @@ mruby_allegro_config_init(mrb_state *mrb)
   struct RClass *am = M_ALLEGRO;
   struct RClass *cc = mrb_define_class_under(mrb, am, "Config", mrb->object_class);
   MRB_SET_INSTANCE_TT(cc, MRB_TT_DATA);
-  mrb_define_class_method(mrb, cc, "create", config_create, ARGS_NONE());
+  mrb_define_class_method(mrb, cc, "create", config_create, MRB_ARGS_NONE());
   mrb_define_alias(mrb, cc->c, "new", "create");
-  mrb_define_method(mrb, cc, "destroy", config_destroy, ARGS_NONE());
-  mrb_define_method(mrb, cc, "destroyed?", config_destroyed, ARGS_NONE());
-  mrb_define_class_method(mrb, cc, "load_file", config_load_file, ARGS_REQ(1));
-  mrb_define_method(mrb, cc, "save_file", config_save_file, ARGS_REQ(1));
-  mrb_define_method(mrb, cc, "add_section", config_add_section, ARGS_REQ(1));
-  mrb_define_method(mrb, cc, "add_comment", config_add_comment, ARGS_REQ(2));
-  mrb_define_method(mrb, cc, "get_value", config_get_value, ARGS_REQ(2));
-  mrb_define_method(mrb, cc, "set_value", config_set_value, ARGS_REQ(3));
-  mrb_define_method(mrb, cc, "merge", config_merge, ARGS_REQ(1));
-  mrb_define_method(mrb, cc, "merge_into", config_merge_into, ARGS_REQ(1));
+  mrb_define_method(mrb, cc, "destroy", config_destroy, MRB_ARGS_NONE());
+  mrb_define_method(mrb, cc, "destroyed?", config_destroyed, MRB_ARGS_NONE());
+  mrb_define_class_method(mrb, cc, "load_file", config_load_file, MRB_ARGS_REQ(1));
+  mrb_define_method(mrb, cc, "save_file", config_save_file, MRB_ARGS_REQ(1));
+  mrb_define_method(mrb, cc, "add_section", config_add_section, MRB_ARGS_REQ(1));
+  mrb_define_method(mrb, cc, "add_comment", config_add_comment, MRB_ARGS_REQ(2));
+  mrb_define_method(mrb, cc, "get_value", config_get_value, MRB_ARGS_REQ(2));
+  mrb_define_method(mrb, cc, "set_value", config_set_value, MRB_ARGS_REQ(3));
+  mrb_define_method(mrb, cc, "merge", config_merge, MRB_ARGS_REQ(1));
+  mrb_define_method(mrb, cc, "merge_into", config_merge_into, MRB_ARGS_REQ(1));
   mrb_define_alias(mrb, cc, "merge!", "merge_into");
 }

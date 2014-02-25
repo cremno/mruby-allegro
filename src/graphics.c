@@ -7,17 +7,9 @@
 #include <allegro5/allegro.h>
 #include "mruby-allegro.h"
 
-static const ALLEGRO_COLOR black = { 0.f, 0.f, 0.f, 1.f };
+static ALLEGRO_COLOR const black = { 0.f, 0.f, 0.f, 1.f };
 
-static void
-color_free(mrb_state *mrb, void *p)
-{
-  if (p) {
-    mrb_free(mrb, p);
-  }
-}
-
-struct mrb_data_type color_data_type = { "allegro/color", color_free };
+struct mrb_data_type const color_data_type = { "allegro/color", mrb_free };
 
 static void
 bitmap_free(mrb_state *mrb, void *p)
@@ -27,7 +19,7 @@ bitmap_free(mrb_state *mrb, void *p)
   }
 }
 
-struct mrb_data_type bitmap_data_type = { "allegro/bitmap", bitmap_free };
+struct mrb_data_type const bitmap_data_type = { "allegro/bitmap", bitmap_free };
 
 static mrb_value
 color_initialize(mrb_state *mrb, mrb_value self)
@@ -40,7 +32,7 @@ color_initialize(mrb_state *mrb, mrb_value self)
   if (argc) {
     Data_Get_Struct(mrb, o, &color_data_type, oc);
   }
-  c = safe_malloc(mrb, sizeof(*c));
+  c = mrb_malloc(mrb, sizeof(*c));
   *c = !argc ? black : *oc;
   DATA_TYPE(self) = &color_data_type;
   DATA_PTR(self) = c;
@@ -55,7 +47,7 @@ color_map_rgb(mrb_state *mrb, mrb_value self)
   mrb_int b;
   ALLEGRO_COLOR *c;
   mrb_get_args(mrb, "iii", &r, &g, &b);
-  c = safe_malloc(mrb, sizeof(*c));
+  c = mrb_malloc(mrb, sizeof(*c));
   *c = al_map_rgb(clamp_uc(r), clamp_uc(g), clamp_uc(b));
   return mrb_obj_value(Data_Wrap_Struct(mrb, mrb_class_ptr(self), &color_data_type, c));
 }
@@ -69,7 +61,7 @@ color_map_rgba(mrb_state *mrb, mrb_value self)
   mrb_int a;
   ALLEGRO_COLOR *c;
   mrb_get_args(mrb, "iiii", &r, &g, &b, &a);
-  c = safe_malloc(mrb, sizeof(*c));
+  c = mrb_malloc(mrb, sizeof(*c));
   *c = al_map_rgba(clamp_uc(r), clamp_uc(g), clamp_uc(b), clamp_uc(a));
   return mrb_obj_value(Data_Wrap_Struct(mrb, mrb_class_ptr(self), &color_data_type, c));
 }
@@ -82,7 +74,7 @@ color_map_rgb_f(mrb_state *mrb, mrb_value self)
   mrb_float b;
   ALLEGRO_COLOR *c;
   mrb_get_args(mrb, "fff", &r, &g, &b);
-  c = safe_malloc(mrb, sizeof(*c));
+  c = mrb_malloc(mrb, sizeof(*c));
   *c = al_map_rgb_f(clamp_f(r), clamp_f(g), clamp_f(b));
   return mrb_obj_value(Data_Wrap_Struct(mrb, mrb_class_ptr(self), &color_data_type, c));
 }
@@ -96,7 +88,7 @@ color_map_rgba_f(mrb_state *mrb, mrb_value self)
   mrb_float a;
   ALLEGRO_COLOR *c;
   mrb_get_args(mrb, "ffff", &r, &g, &b, &a);
-  c = safe_malloc(mrb, sizeof(*c));
+  c = mrb_malloc(mrb, sizeof(*c));
   *c = al_map_rgba_f(clamp_f(r), clamp_f(g), clamp_f(b), clamp_f(a));
   return mrb_obj_value(Data_Wrap_Struct(mrb, mrb_class_ptr(self), &color_data_type, c));
 }
@@ -129,9 +121,9 @@ color_unmap_rgb_f(mrb_state *mrb, mrb_value self)
   Data_Get_Struct(mrb, self, &color_data_type, c);
   al_unmap_rgb_f(*c, &r, &g, &b);
   ary = mrb_ary_new_capa(mrb, 3);
-  mrb_ary_push(mrb, ary, mrb_float_value(r));
-  mrb_ary_push(mrb, ary, mrb_float_value(g));
-  mrb_ary_push(mrb, ary, mrb_float_value(b));
+  mrb_ary_push(mrb, ary, mrb_float_value(mrb, r));
+  mrb_ary_push(mrb, ary, mrb_float_value(mrb, g));
+  mrb_ary_push(mrb, ary, mrb_float_value(mrb, b));
   return ary;
 }
 
@@ -166,10 +158,10 @@ color_unmap_rgba_f(mrb_state *mrb, mrb_value self)
   Data_Get_Struct(mrb, self, &color_data_type, c);
   al_unmap_rgba_f(*c, &r, &g, &b, &a);
   ary = mrb_ary_new_capa(mrb, 4);
-  mrb_ary_push(mrb, ary, mrb_float_value(r));
-  mrb_ary_push(mrb, ary, mrb_float_value(g));
-  mrb_ary_push(mrb, ary, mrb_float_value(b));
-  mrb_ary_push(mrb, ary, mrb_float_value(a));
+  mrb_ary_push(mrb, ary, mrb_float_value(mrb, r));
+  mrb_ary_push(mrb, ary, mrb_float_value(mrb, g));
+  mrb_ary_push(mrb, ary, mrb_float_value(mrb, b));
+  mrb_ary_push(mrb, ary, mrb_float_value(mrb, a));
   return ary;
 }
 
@@ -178,7 +170,7 @@ color_inspect(mrb_state *mrb, mrb_value self)
 {
   char buf[128];
   ALLEGRO_COLOR *c;
-  const char *s;
+  char const *s;
   int len;
   Data_Get_Struct(mrb, self, &color_data_type, c);
   s = mrb_obj_classname(mrb, self);
@@ -191,7 +183,7 @@ color_ ## attr ## _getter(mrb_state *mrb, mrb_value self)\
 {\
   ALLEGRO_COLOR *c;\
   Data_Get_Struct(mrb, self, &color_data_type, c);\
-  return mrb_float_value(c->attr);\
+  return mrb_float_value(mrb, c->attr);\
 }\
 static mrb_value \
 color_ ## attr ## _setter(mrb_state *mrb, mrb_value self)\
@@ -201,7 +193,7 @@ color_ ## attr ## _setter(mrb_state *mrb, mrb_value self)\
   Data_Get_Struct(mrb, self, &color_data_type, c);\
   mrb_get_args(mrb, "f", &f);\
   c->attr = clamp_f(f);\
-  return mrb_float_value(f);\
+  return mrb_float_value(mrb, f);\
 }
 
 ATTR(r)
@@ -276,7 +268,7 @@ bitmap_get_pixel(mrb_state *mrb, mrb_value self)
   ALLEGRO_COLOR *c;
   Check_Destroyed(mrb, self, bitmap, b);
   mrb_get_args(mrb, "ii", &x, &y);
-  c = safe_malloc(mrb, sizeof(*c));
+  c = mrb_malloc(mrb, sizeof(*c));
   *c = al_get_pixel(b, clamp_int(x), clamp_int(y));
   return mrb_obj_value(Data_Wrap_Struct(mrb, C_ALLEGRO_COLOR, &color_data_type, c));
 }
@@ -303,7 +295,8 @@ clear_to_color(mrb_state *mrb, mrb_value self)
   mrb_value o;
   if (!mrb_get_args(mrb, "|o", &o)) {
     al_clear_to_color(black);
-  } else {
+  }
+  else {
     ALLEGRO_COLOR *c;
     Data_Get_Struct(mrb, o, &color_data_type, c);
     al_clear_to_color(*c);
@@ -612,13 +605,17 @@ target_setter(mrb_state *mrb, mrb_value self)
     ALLEGRO_BITMAP *b;
     Check_Destroyed(mrb, o, bitmap, b);
     al_set_target_bitmap(b);
-  } else if (DATA_TYPE(o) == &display_data_type) {
+  }
+  else if (DATA_TYPE(o) == &display_data_type) {
     ALLEGRO_DISPLAY *d;
     Check_Destroyed(mrb, o, display, d);
     al_set_target_backbuffer(d);
-  } else {
+  }
+  else {
 type_error:
-    mrb_raisef(mrb, E_TYPE_ERROR, "expected %s or %s", bitmap_data_type.struct_name, display_data_type.struct_name);
+    mrb_raisef(mrb, E_TYPE_ERROR, "expected %S or %S",
+      mrb_str_new_static(mrb, bitmap_data_type.struct_name, strlen(bitmap_data_type.struct_name)),
+      mrb_str_new_static(mrb, display_data_type.struct_name, strlen(display_data_type.struct_name)));
   }
   return o;
 }
@@ -772,58 +769,58 @@ mruby_allegro_graphics_init(mrb_state *mrb)
   struct RClass *bc = mrb_define_class_under(mrb, am, "Bitmap", mrb->object_class);
   MRB_SET_INSTANCE_TT(cc, MRB_TT_DATA);
   MRB_SET_INSTANCE_TT(bc, MRB_TT_DATA);
-  mrb_define_method(mrb, cc, "initialize", color_initialize, ARGS_OPT(1));
-  mrb_define_class_method(mrb, cc, "rgb", color_map_rgb, ARGS_REQ(3));
-  mrb_define_class_method(mrb, cc, "rgba", color_map_rgba, ARGS_REQ(4));
-  mrb_define_class_method(mrb, cc, "rgb_f", color_map_rgb_f, ARGS_REQ(3));
-  mrb_define_class_method(mrb, cc, "rgba_f", color_map_rgba_f, ARGS_REQ(4));
-  mrb_define_method(mrb, cc, "rgb", color_unmap_rgb, ARGS_NONE());
-  mrb_define_method(mrb, cc, "rgb_f", color_unmap_rgb_f, ARGS_NONE());
-  mrb_define_method(mrb, cc, "rgba", color_unmap_rgba, ARGS_NONE());
-  mrb_define_method(mrb, cc, "rgba_f", color_unmap_rgba_f, ARGS_NONE());
-  mrb_define_method(mrb, cc, "inspect", color_inspect, ARGS_NONE());
-  mrb_define_method(mrb, cc, "r", color_r_getter, ARGS_NONE());
-  mrb_define_method(mrb, cc, "g", color_g_getter, ARGS_NONE());
-  mrb_define_method(mrb, cc, "b", color_b_getter, ARGS_NONE());
-  mrb_define_method(mrb, cc, "a", color_a_getter, ARGS_NONE());
-  mrb_define_method(mrb, cc, "r=", color_r_setter, ARGS_REQ(1));
-  mrb_define_method(mrb, cc, "g=", color_g_setter, ARGS_REQ(1));
-  mrb_define_method(mrb, cc, "b=", color_b_setter, ARGS_REQ(1));
-  mrb_define_method(mrb, cc, "a=", color_a_setter, ARGS_REQ(1));
-  mrb_define_method(mrb, bc, "unlock", bitmap_unlock, ARGS_NONE());
+  mrb_define_method(mrb, cc, "initialize", color_initialize, MRB_ARGS_OPT(1));
+  mrb_define_class_method(mrb, cc, "rgb", color_map_rgb, MRB_ARGS_REQ(3));
+  mrb_define_class_method(mrb, cc, "rgba", color_map_rgba, MRB_ARGS_REQ(4));
+  mrb_define_class_method(mrb, cc, "rgb_f", color_map_rgb_f, MRB_ARGS_REQ(3));
+  mrb_define_class_method(mrb, cc, "rgba_f", color_map_rgba_f, MRB_ARGS_REQ(4));
+  mrb_define_method(mrb, cc, "rgb", color_unmap_rgb, MRB_ARGS_NONE());
+  mrb_define_method(mrb, cc, "rgb_f", color_unmap_rgb_f, MRB_ARGS_NONE());
+  mrb_define_method(mrb, cc, "rgba", color_unmap_rgba, MRB_ARGS_NONE());
+  mrb_define_method(mrb, cc, "rgba_f", color_unmap_rgba_f, MRB_ARGS_NONE());
+  mrb_define_method(mrb, cc, "inspect", color_inspect, MRB_ARGS_NONE());
+  mrb_define_method(mrb, cc, "r", color_r_getter, MRB_ARGS_NONE());
+  mrb_define_method(mrb, cc, "g", color_g_getter, MRB_ARGS_NONE());
+  mrb_define_method(mrb, cc, "b", color_b_getter, MRB_ARGS_NONE());
+  mrb_define_method(mrb, cc, "a", color_a_getter, MRB_ARGS_NONE());
+  mrb_define_method(mrb, cc, "r=", color_r_setter, MRB_ARGS_REQ(1));
+  mrb_define_method(mrb, cc, "g=", color_g_setter, MRB_ARGS_REQ(1));
+  mrb_define_method(mrb, cc, "b=", color_b_setter, MRB_ARGS_REQ(1));
+  mrb_define_method(mrb, cc, "a=", color_a_setter, MRB_ARGS_REQ(1));
+  mrb_define_method(mrb, bc, "unlock", bitmap_unlock, MRB_ARGS_NONE());
   mrb_undef_class_method(mrb, bc, "new");
-  mrb_define_class_method(mrb, bc, "create", bitmap_create, ARGS_REQ(2));
-  mrb_define_method(mrb, bc, "destroy", bitmap_destroy, ARGS_NONE());
-  mrb_define_method(mrb, bc, "destroyed?", bitmap_destroyed, ARGS_NONE());
-  mrb_define_method(mrb, bc, "height", bitmap_height, ARGS_NONE());
-  mrb_define_method(mrb, bc, "width", bitmap_width, ARGS_NONE());
-  mrb_define_method(mrb, bc, "get_pixel", bitmap_get_pixel, ARGS_REQ(2));
-  mrb_define_method(mrb, bc, "locked?", bitmap_locked, ARGS_NONE());
-  mrb_define_method(mrb, bc, "compatible?", bitmap_compatible, ARGS_NONE());
-  mrb_define_class_method(mrb, am, "clear_to_color", clear_to_color, ARGS_OPT(1));
-  mrb_define_method(mrb, bc, "draw", bitmap_draw, ARGS_REQ(2) | ARGS_OPT(2));
-  mrb_define_method(mrb, bc, "draw_tinted", bitmap_draw_tinted, ARGS_REQ(3) | ARGS_OPT(2));
-  mrb_define_method(mrb, bc, "draw_region", bitmap_draw_region, ARGS_REQ(6) | ARGS_OPT(2));
-  mrb_define_method(mrb, bc, "draw_tinted_region", bitmap_draw_tinted_region, ARGS_REQ(7) | ARGS_OPT(2));
-  mrb_define_class_method(mrb, am, "draw_pixel", draw_pixel, ARGS_REQ(3));
-  mrb_define_method(mrb, bc, "draw_rotated", bitmap_draw_rotated, ARGS_REQ(5) | ARGS_OPT(2));
-  mrb_define_method(mrb, bc, "draw_tinted_rotated", bitmap_draw_tinted_rotated, ARGS_REQ(6) | ARGS_OPT(2));
-  mrb_define_method(mrb, bc, "draw_scaled_rotated", bitmap_draw_scaled_rotated, ARGS_REQ(7) | ARGS_OPT(2));
-  mrb_define_method(mrb, bc, "draw_tinted_scaled_rotated", bitmap_draw_tinted_scaled_rotated, ARGS_REQ(8) | ARGS_OPT(2));
-  mrb_define_method(mrb, bc, "draw_tinted_scaled_rotated_region", bitmap_draw_tinted_scaled_rotated_region, ARGS_REQ(12) | ARGS_OPT(2));
-  mrb_define_method(mrb, bc, "draw_scaled", bitmap_draw_scaled, ARGS_REQ(8) | ARGS_OPT(2));
-  mrb_define_method(mrb, bc, "draw_tinted_scaled", bitmap_draw_tinted_scaled, ARGS_REQ(9) | ARGS_OPT(2));
-  mrb_define_class_method(mrb, am, "put_pixel", put_pixel, ARGS_REQ(3));
-  mrb_define_class_method(mrb, am, "put_blended_pixel", put_blended_pixel, ARGS_REQ(3));
-  mrb_define_class_method(mrb, am, "target=", target_setter, ARGS_REQ(1));
-  mrb_define_class_method(mrb, C_ALLEGRO_DISPLAY, "current", display_current, ARGS_NONE());
-  mrb_define_class_method(mrb, am, "blender", blender_getter, ARGS_NONE());
-  mrb_define_class_method(mrb, am, "separate_blender", separate_blender_getter, ARGS_NONE());
-  mrb_define_class_method(mrb, am, "blender=", blender_setter, ARGS_REQ(1));
-  mrb_define_class_method(mrb, am, "separate_blender=", separate_blender_setter, ARGS_REQ(1));
-  mrb_define_method(mrb, bc, "convert_mask_to_alpha", convert_mask_to_alpha, ARGS_REQ(1));
-  mrb_define_class_method(mrb, am, "hold_drawing", hold_drawing, ARGS_REQ(1));
-  mrb_define_class_method(mrb, am, "drawing_held?", drawing_held, ARGS_NONE());
-  mrb_define_class_method(mrb, bc, "load", bitmap_load, ARGS_REQ(1));
-  mrb_define_method(mrb, bc, "save", bitmap_save, ARGS_REQ(1));
+  mrb_define_class_method(mrb, bc, "create", bitmap_create, MRB_ARGS_REQ(2));
+  mrb_define_method(mrb, bc, "destroy", bitmap_destroy, MRB_ARGS_NONE());
+  mrb_define_method(mrb, bc, "destroyed?", bitmap_destroyed, MRB_ARGS_NONE());
+  mrb_define_method(mrb, bc, "height", bitmap_height, MRB_ARGS_NONE());
+  mrb_define_method(mrb, bc, "width", bitmap_width, MRB_ARGS_NONE());
+  mrb_define_method(mrb, bc, "get_pixel", bitmap_get_pixel, MRB_ARGS_REQ(2));
+  mrb_define_method(mrb, bc, "locked?", bitmap_locked, MRB_ARGS_NONE());
+  mrb_define_method(mrb, bc, "compatible?", bitmap_compatible, MRB_ARGS_NONE());
+  mrb_define_class_method(mrb, am, "clear_to_color", clear_to_color, MRB_ARGS_OPT(1));
+  mrb_define_method(mrb, bc, "draw", bitmap_draw, MRB_ARGS_REQ(2) | MRB_ARGS_OPT(2));
+  mrb_define_method(mrb, bc, "draw_tinted", bitmap_draw_tinted, MRB_ARGS_REQ(3) | MRB_ARGS_OPT(2));
+  mrb_define_method(mrb, bc, "draw_region", bitmap_draw_region, MRB_ARGS_REQ(6) | MRB_ARGS_OPT(2));
+  mrb_define_method(mrb, bc, "draw_tinted_region", bitmap_draw_tinted_region, MRB_ARGS_REQ(7) | MRB_ARGS_OPT(2));
+  mrb_define_class_method(mrb, am, "draw_pixel", draw_pixel, MRB_ARGS_REQ(3));
+  mrb_define_method(mrb, bc, "draw_rotated", bitmap_draw_rotated, MRB_ARGS_REQ(5) | MRB_ARGS_OPT(2));
+  mrb_define_method(mrb, bc, "draw_tinted_rotated", bitmap_draw_tinted_rotated, MRB_ARGS_REQ(6) | MRB_ARGS_OPT(2));
+  mrb_define_method(mrb, bc, "draw_scaled_rotated", bitmap_draw_scaled_rotated, MRB_ARGS_REQ(7) | MRB_ARGS_OPT(2));
+  mrb_define_method(mrb, bc, "draw_tinted_scaled_rotated", bitmap_draw_tinted_scaled_rotated, MRB_ARGS_REQ(8) | MRB_ARGS_OPT(2));
+  mrb_define_method(mrb, bc, "draw_tinted_scaled_rotated_region", bitmap_draw_tinted_scaled_rotated_region, MRB_ARGS_REQ(12) | MRB_ARGS_OPT(2));
+  mrb_define_method(mrb, bc, "draw_scaled", bitmap_draw_scaled, MRB_ARGS_REQ(8) | MRB_ARGS_OPT(2));
+  mrb_define_method(mrb, bc, "draw_tinted_scaled", bitmap_draw_tinted_scaled, MRB_ARGS_REQ(9) | MRB_ARGS_OPT(2));
+  mrb_define_class_method(mrb, am, "put_pixel", put_pixel, MRB_ARGS_REQ(3));
+  mrb_define_class_method(mrb, am, "put_blended_pixel", put_blended_pixel, MRB_ARGS_REQ(3));
+  mrb_define_class_method(mrb, am, "target=", target_setter, MRB_ARGS_REQ(1));
+  mrb_define_class_method(mrb, C_ALLEGRO_DISPLAY, "current", display_current, MRB_ARGS_NONE());
+  mrb_define_class_method(mrb, am, "blender", blender_getter, MRB_ARGS_NONE());
+  mrb_define_class_method(mrb, am, "separate_blender", separate_blender_getter, MRB_ARGS_NONE());
+  mrb_define_class_method(mrb, am, "blender=", blender_setter, MRB_ARGS_REQ(1));
+  mrb_define_class_method(mrb, am, "separate_blender=", separate_blender_setter, MRB_ARGS_REQ(1));
+  mrb_define_method(mrb, bc, "convert_mask_to_alpha", convert_mask_to_alpha, MRB_ARGS_REQ(1));
+  mrb_define_class_method(mrb, am, "hold_drawing", hold_drawing, MRB_ARGS_REQ(1));
+  mrb_define_class_method(mrb, am, "drawing_held?", drawing_held, MRB_ARGS_NONE());
+  mrb_define_class_method(mrb, bc, "load", bitmap_load, MRB_ARGS_REQ(1));
+  mrb_define_method(mrb, bc, "save", bitmap_save, MRB_ARGS_REQ(1));
 }

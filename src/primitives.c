@@ -292,23 +292,23 @@ void
 mruby_allegro_primitives_init(mrb_state *mrb)
 {
   struct RClass *am = M_ALLEGRO;
-  mrb_define_class_method(mrb, am, "primitives_version", version, ARGS_NONE());
-  mrb_define_class_method(mrb, am, "init_primitives_addon", init, ARGS_NONE());
-  mrb_define_class_method(mrb, am, "shutdown_primitives_addon", shutdown_addon, ARGS_NONE());
-  mrb_define_module_function(mrb, am, "draw_line", draw_line, ARGS_REQ(6));
-  mrb_define_module_function(mrb, am, "draw_triangle", draw_triangle, ARGS_REQ(8));
-  mrb_define_module_function(mrb, am, "draw_filled_triangle", draw_filled_triangle, ARGS_REQ(7));
-  mrb_define_module_function(mrb, am, "draw_rectangle", draw_rectangle, ARGS_REQ(6));
-  mrb_define_module_function(mrb, am, "draw_filled_rectangle", draw_filled_rectangle, ARGS_REQ(5));
-  mrb_define_module_function(mrb, am, "draw_rounded_rectangle", draw_rounded_rectangle, ARGS_REQ(8));
-  mrb_define_module_function(mrb, am, "draw_filled_rounded_rectangle", draw_filled_rounded_rectangle, ARGS_REQ(7));
-  mrb_define_module_function(mrb, am, "draw_pieslice", draw_pieslice, ARGS_REQ(7));
-  mrb_define_module_function(mrb, am, "draw_filled_pieslice", draw_filled_pieslice, ARGS_REQ(6));
-  mrb_define_module_function(mrb, am, "draw_ellipse", draw_ellipse, ARGS_REQ(6));
-  mrb_define_module_function(mrb, am, "draw_filled_ellipse", draw_filled_ellipse, ARGS_REQ(5));
-  mrb_define_module_function(mrb, am, "draw_circle", draw_circle, ARGS_REQ(5));
-  mrb_define_module_function(mrb, am, "draw_filled_circle", draw_filled_circle, ARGS_REQ(4));
-  mrb_define_module_function(mrb, am, "draw_arc", draw_arc, ARGS_REQ(7));
-  mrb_define_module_function(mrb, am, "draw_elliptical_arc", draw_elliptical_arc, ARGS_REQ(8));
-  mrb_define_module_function(mrb, am, "draw_spline", draw_spline, ARGS_REQ(10));
+  mrb_define_class_method(mrb, am, "primitives_version", version, MRB_ARGS_NONE());
+  mrb_define_class_method(mrb, am, "init_primitives_addon", init, MRB_ARGS_NONE());
+  mrb_define_class_method(mrb, am, "shutdown_primitives_addon", shutdown_addon, MRB_ARGS_NONE());
+  mrb_define_module_function(mrb, am, "draw_line", draw_line, MRB_ARGS_REQ(6));
+  mrb_define_module_function(mrb, am, "draw_triangle", draw_triangle, MRB_ARGS_REQ(8));
+  mrb_define_module_function(mrb, am, "draw_filled_triangle", draw_filled_triangle, MRB_ARGS_REQ(7));
+  mrb_define_module_function(mrb, am, "draw_rectangle", draw_rectangle, MRB_ARGS_REQ(6));
+  mrb_define_module_function(mrb, am, "draw_filled_rectangle", draw_filled_rectangle, MRB_ARGS_REQ(5));
+  mrb_define_module_function(mrb, am, "draw_rounded_rectangle", draw_rounded_rectangle, MRB_ARGS_REQ(8));
+  mrb_define_module_function(mrb, am, "draw_filled_rounded_rectangle", draw_filled_rounded_rectangle, MRB_ARGS_REQ(7));
+  mrb_define_module_function(mrb, am, "draw_pieslice", draw_pieslice, MRB_ARGS_REQ(7));
+  mrb_define_module_function(mrb, am, "draw_filled_pieslice", draw_filled_pieslice, MRB_ARGS_REQ(6));
+  mrb_define_module_function(mrb, am, "draw_ellipse", draw_ellipse, MRB_ARGS_REQ(6));
+  mrb_define_module_function(mrb, am, "draw_filled_ellipse", draw_filled_ellipse, MRB_ARGS_REQ(5));
+  mrb_define_module_function(mrb, am, "draw_circle", draw_circle, MRB_ARGS_REQ(5));
+  mrb_define_module_function(mrb, am, "draw_filled_circle", draw_filled_circle, MRB_ARGS_REQ(4));
+  mrb_define_module_function(mrb, am, "draw_arc", draw_arc, MRB_ARGS_REQ(7));
+  mrb_define_module_function(mrb, am, "draw_elliptical_arc", draw_elliptical_arc, MRB_ARGS_REQ(8));
+  mrb_define_module_function(mrb, am, "draw_spline", draw_spline, MRB_ARGS_REQ(10));
 }

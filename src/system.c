@@ -1,5 +1,6 @@
 #include <mruby.h>
 #include <mruby/hash.h>
+#include <mruby/data.h>
 #include <mruby/string.h>
 #include <allegro5/allegro.h>
 #include "mruby-allegro.h"
@@ -72,14 +73,14 @@ void
 mruby_allegro_system_init(mrb_state *mrb)
 {
   struct RClass *am = M_ALLEGRO;
-  mrb_define_class_method(mrb, am, "allegro_version", version, ARGS_NONE());
-  mrb_define_class_method(mrb, am, "init", install, ARGS_NONE());
-  mrb_define_class_method(mrb, am, "install", install, ARGS_NONE());
-  mrb_define_class_method(mrb, am, "uninstall", uninstall, ARGS_NONE());
-  mrb_define_class_method(mrb, am, "installed?", installed, ARGS_NONE());
-  mrb_define_class_method(mrb, am, "exe_name=", exe_name_setter, ARGS_REQ(1));
-  mrb_define_class_method(mrb, am, "app_name=", app_name_setter, ARGS_REQ(1));
-  mrb_define_class_method(mrb, am, "org_name=", org_name_setter, ARGS_REQ(1));
-  mrb_define_class_method(mrb, am, "app_name", app_name_getter, ARGS_NONE());
-  mrb_define_class_method(mrb, am, "org_name", org_name_getter, ARGS_NONE());
+  mrb_define_class_method(mrb, am, "allegro_version", version, MRB_ARGS_NONE());
+  mrb_define_class_method(mrb, am, "init", install, MRB_ARGS_NONE());
+  mrb_define_class_method(mrb, am, "install", install, MRB_ARGS_NONE());
+  mrb_define_class_method(mrb, am, "uninstall", uninstall, MRB_ARGS_NONE());
+  mrb_define_class_method(mrb, am, "installed?", installed, MRB_ARGS_NONE());
+  mrb_define_class_method(mrb, am, "exe_name=", exe_name_setter, MRB_ARGS_REQ(1));
+  mrb_define_class_method(mrb, am, "app_name=", app_name_setter, MRB_ARGS_REQ(1));
+  mrb_define_class_method(mrb, am, "org_name=", org_name_setter, MRB_ARGS_REQ(1));
+  mrb_define_class_method(mrb, am, "app_name", app_name_getter, MRB_ARGS_NONE());
+  mrb_define_class_method(mrb, am, "org_name", org_name_getter, MRB_ARGS_NONE());
 }

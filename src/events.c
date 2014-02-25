@@ -4,17 +4,9 @@
 #include <allegro5/allegro.h>
 #include "mruby-allegro.h"
 
-static void
-event_free(mrb_state *mrb, void *p)
-{
-  if (p) {
-    mrb_free(mrb, p);
-  }
-}
+struct mrb_data_type const event_data_type = { "allegro/event", mrb_free };
 
-struct mrb_data_type event_data_type = { "allegro/event", event_free };
-
-struct mrb_data_type eventsource_data_type = { "allegro/eventsource", NULL };
+struct mrb_data_type const eventsource_data_type = { "allegro/eventsource", NULL };
 
 static void
 eventqueue_free(mrb_state *mrb, void *p)
@@ -24,7 +16,7 @@ eventqueue_free(mrb_state *mrb, void *p)
   }
 }
 
-struct mrb_data_type eventqueue_data_type = { "allegro/eventqueue", eventqueue_free };
+struct mrb_data_type const eventqueue_data_type = { "allegro/eventqueue", eventqueue_free };
 
 static mrb_value
 event_type(mrb_state *mrb, mrb_value self)
@@ -172,13 +164,16 @@ eventqueue_next_event(mrb_state *mrb, mrb_value self)
 {
   ALLEGRO_EVENT_QUEUE *eq;
   ALLEGRO_EVENT *e;
+  mrb_value o;
   Check_Destroyed(mrb, self, eventqueue, eq);
-  e = safe_malloc(mrb, sizeof(*e));
+  e = mrb_malloc(mrb, sizeof(*e));
   if (al_get_next_event(eq, e)) {
-    return mrb_obj_value(Data_Wrap_Struct(mrb, C_ALLEGRO_EVENT, &event_data_type, e));
-  } else {
-    return mrb_nil_value();
+    o = mrb_obj_value(Data_Wrap_Struct(mrb, C_ALLEGRO_EVENT, &event_data_type, e));
   }
+  else {
+    o = mrb_nil_value();
+  }
+  return o;
 }
 
 static mrb_value
@@ -204,7 +199,7 @@ eventqueue_wait_for_event(mrb_state *mrb, mrb_value self)
   ALLEGRO_EVENT_QUEUE *eq;
   ALLEGRO_EVENT *e;
   Check_Destroyed(mrb, self, eventqueue, eq);
-  e = safe_malloc(mrb, sizeof(*e));
+  e = mrb_malloc(mrb, sizeof(*e));
   al_wait_for_event(eq, e);
   return mrb_obj_value(Data_Wrap_Struct(mrb, C_ALLEGRO_EVENT, &event_data_type, e));
 }
@@ -218,29 +213,29 @@ mruby_allegro_events_init(mrb_state *mrb)
   struct RClass *eqc = mrb_define_class_under(mrb, am, "EventQueue", mrb->object_class);
   MRB_SET_INSTANCE_TT(ec, MRB_TT_DATA);
   mrb_undef_class_method(mrb, ec, "new");
-  mrb_define_method(mrb, ec, "type", event_type, ARGS_NONE());
-  mrb_define_method(mrb, ec, "keycode", event_keyboard_keycode, ARGS_NONE());
-  mrb_define_method(mrb, ec, "x", event_mouse_x, ARGS_NONE());
-  mrb_define_method(mrb, ec, "y", event_mouse_y, ARGS_NONE());
-  mrb_define_method(mrb, ec, "z", event_mouse_z, ARGS_NONE());
-  mrb_define_method(mrb, ec, "w", event_mouse_w, ARGS_NONE());
-  mrb_define_method(mrb, ec, "dx", event_mouse_dx, ARGS_NONE());
-  mrb_define_method(mrb, ec, "dy", event_mouse_dy, ARGS_NONE());
-  mrb_define_method(mrb, ec, "dz", event_mouse_dz, ARGS_NONE());
-  mrb_define_method(mrb, ec, "dw", event_mouse_dw, ARGS_NONE());
-  mrb_define_method(mrb, ec, "button", event_mouse_button, ARGS_NONE());
+  mrb_define_method(mrb, ec, "type", event_type, MRB_ARGS_NONE());
+  mrb_define_method(mrb, ec, "keycode", event_keyboard_keycode, MRB_ARGS_NONE());
+  mrb_define_method(mrb, ec, "x", event_mouse_x, MRB_ARGS_NONE());
+  mrb_define_method(mrb, ec, "y", event_mouse_y, MRB_ARGS_NONE());
+  mrb_define_method(mrb, ec, "z", event_mouse_z, MRB_ARGS_NONE());
+  mrb_define_method(mrb, ec, "w", event_mouse_w, MRB_ARGS_NONE());
+  mrb_define_method(mrb, ec, "dx", event_mouse_dx, MRB_ARGS_NONE());
+  mrb_define_method(mrb, ec, "dy", event_mouse_dy, MRB_ARGS_NONE());
+  mrb_define_method(mrb, ec, "dz", event_mouse_dz, MRB_ARGS_NONE());
+  mrb_define_method(mrb, ec, "dw", event_mouse_dw, MRB_ARGS_NONE());
+  mrb_define_method(mrb, ec, "button", event_mouse_button, MRB_ARGS_NONE());
   MRB_SET_INSTANCE_TT(esc, MRB_TT_DATA);
   mrb_undef_class_method(mrb, esc, "new");
   MRB_SET_INSTANCE_TT(eqc, MRB_TT_DATA);
   mrb_define_alias(mrb, eqc->c, "create", "new");
-  mrb_define_method(mrb, eqc, "initialize", eventqueue_initialize, ARGS_NONE());
-  mrb_define_method(mrb, eqc, "destroy", eventqueue_destroy, ARGS_NONE());
-  mrb_define_method(mrb, eqc, "destroyed?", eventqueue_destroyed, ARGS_NONE());
-  mrb_define_method(mrb, eqc, "register", eventqueue_register, ARGS_REQ(1));
-  mrb_define_method(mrb, eqc, "unregister", eventqueue_unregister, ARGS_REQ(1));
-  mrb_define_method(mrb, eqc, "empty?", eventqueue_empty, ARGS_NONE());
-  mrb_define_method(mrb, eqc, "next_event", eventqueue_next_event, ARGS_NONE());
-  mrb_define_method(mrb, eqc, "drop_next_event", eventqueue_drop_next_event, ARGS_NONE());
-  mrb_define_method(mrb, eqc, "flush", eventqueue_flush, ARGS_NONE());
-  mrb_define_method(mrb, eqc, "wait_for_event", eventqueue_wait_for_event, ARGS_NONE());
+  mrb_define_method(mrb, eqc, "initialize", eventqueue_initialize, MRB_ARGS_NONE());
+  mrb_define_method(mrb, eqc, "destroy", eventqueue_destroy, MRB_ARGS_NONE());
+  mrb_define_method(mrb, eqc, "destroyed?", eventqueue_destroyed, MRB_ARGS_NONE());
+  mrb_define_method(mrb, eqc, "register", eventqueue_register, MRB_ARGS_REQ(1));
+  mrb_define_method(mrb, eqc, "unregister", eventqueue_unregister, MRB_ARGS_REQ(1));
+  mrb_define_method(mrb, eqc, "empty?", eventqueue_empty, MRB_ARGS_NONE());
+  mrb_define_method(mrb, eqc, "next_event", eventqueue_next_event, MRB_ARGS_NONE());
+  mrb_define_method(mrb, eqc, "drop_next_event", eventqueue_drop_next_event, MRB_ARGS_NONE());
+  mrb_define_method(mrb, eqc, "flush", eventqueue_flush, MRB_ARGS_NONE());
+  mrb_define_method(mrb, eqc, "wait_for_event", eventqueue_wait_for_event, MRB_ARGS_NONE());
 }

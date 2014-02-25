@@ -9,7 +9,7 @@
 #include <allegro5/allegro_primitives.h>
 
 static void
-quit(const char *s)
+quit(char const *s)
 {
   fputs(s, stderr);
   exit(EXIT_FAILURE);
@@ -50,7 +50,7 @@ mrb_mruby_allegro_gem_init(mrb_state* mrb)
   mruby_allegro_dialog_init(mrb); mrb_gc_arena_restore(mrb, ai);
   mruby_allegro_primitives_init(mrb); mrb_gc_arena_restore(mrb, ai);
   consts_init(mrb); mrb_gc_arena_restore(mrb, ai);
-#ifdef INIT_AT_START
+#ifdef MRUBY_ALLEGRO_AUTOINIT
   if (!al_init()) {
     quit("failed to initialize allegro!\n");
   }
@@ -67,13 +67,13 @@ mrb_mruby_allegro_gem_init(mrb_state* mrb)
   if (!al_init_image_addon()) {
     quit("failed to initialize allegro image addon!\n");
   }
-  if (!al_init_primitives_addon()){
+  if (!al_init_primitives_addon()) {
     quit("failed to initialize allegro primitives addon!\n");
   }
 #endif
 }
 
 void
-mrb_mruby_allegro_gem_final(mrb_state* mrb)
+mrb_mruby_allegro_gem_final(mrb_state *mrb)
 {
 }
