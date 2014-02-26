@@ -1,8 +1,10 @@
 #ifndef MRUBY_ALLEGRO_H
 #define MRUBY_ALLEGRO_H
 
+#include <mrbconf.h>
+
 #ifdef MRB_INT16
-#error "MRB_INT16 is not supported"
+#error MRB_INT16 is not supported
 #endif
 
 #define M_ALLEGRO             (mrb_module_get(mrb, "Al"))
