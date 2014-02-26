@@ -8,7 +8,7 @@
 #endif
 
 #define M_ALLEGRO             (mrb_module_get(mrb, "Al"))
-#define E_ALLEGRO_ERROR       (mrb_class_get(mrb, "AllegroError"))
+#define E_ALLEGRO_ERROR       (mrbal_get_const(mrb, "AllegroError"))
 #define C_ALLEGRO_BITMAP      (mrbal_get_const(mrb, "Bitmap"))
 #define C_ALLEGRO_COLOR       (mrbal_get_const(mrb, "Color"))
 #define C_ALLEGRO_CONFIG      (mrbal_get_const(mrb, "Config"))
