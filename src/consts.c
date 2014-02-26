@@ -2,7 +2,7 @@
 #include <allegro5/allegro.h>
 
 void
-consts_init(mrb_state *mrb)
+mrbal_consts_init(mrb_state *mrb)
 {
   //
   mrb_define_global_const(mrb, "ALLEGRO_EVENT_JOYSTICK_AXIS", mrb_fixnum_value(ALLEGRO_EVENT_JOYSTICK_AXIS));

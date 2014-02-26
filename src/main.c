@@ -31,7 +31,7 @@ mrb_mruby_allegro_gem_init(mrb_state* mrb)
   extern void mruby_allegro_image_init(mrb_state *);
   extern void mruby_allegro_dialog_init(mrb_state *);
   extern void mruby_allegro_primitives_init(mrb_state *);
-  extern void consts_init(mrb_state *);
+  extern void mrbal_consts_init(mrb_state *);
   int ai = mrb_gc_arena_save(mrb);
   struct RClass *am = mrb_define_module(mrb, "Al");
   mrb_define_class_under(mrb, am, "AllegroError", mrb->eStandardError_class);
