@@ -15,6 +15,7 @@
 #define C_ALLEGRO_EVENTSOURCE (mrbal_get_const(mrb, "EventSource"))
 #define C_ALLEGRO_EVENTQUEUE  (mrbal_get_const(mrb, "EventQueue"))
 #define C_ALLEGRO_FONT        (mrbal_get_const(mrb, "Font"))
+#define C_ALLEGRO_TIMEOUT     (mrbal_get_const(mrb, "Timeout"))
 
 #define Check_Destroyed(mrb, obj, t, sval) do {                \
   Data_Get_Struct(mrb, obj, &mrbal_ ## t ## _data_type, sval); \
@@ -39,6 +40,7 @@ extern struct mrb_data_type const mrbal_event_data_type;
 extern struct mrb_data_type const mrbal_eventsource_data_type;
 extern struct mrb_data_type const mrbal_eventqueue_data_type;
 extern struct mrb_data_type const mrbal_font_data_type;
+extern struct mrb_data_type const mrbal_timeout_data_type;
 
 struct RClass *mrbal_get_const(mrb_state *, char const *);
 mrb_value mrbal_version_to_hash(mrb_state *, uint32_t);
