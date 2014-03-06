@@ -97,7 +97,7 @@ color_unmap_rgb(mrb_state *mrb, mrb_value self)
   unsigned char g;
   unsigned char b;
   mrb_value ary;
-  Data_Get_Struct(mrb, self, &mrbal_color_data_type, c);
+  c = mrb_data_get_ptr(mrb, self, &mrbal_color_data_type);
   al_unmap_rgb(*c, &r, &g, &b);
   ary = mrb_ary_new_capa(mrb, 3);
   mrb_ary_push(mrb, ary, mrb_fixnum_value(r));
@@ -114,7 +114,7 @@ color_unmap_rgb_f(mrb_state *mrb, mrb_value self)
   float g;
   float b;
   mrb_value ary;
-  Data_Get_Struct(mrb, self, &mrbal_color_data_type, c);
+  c = mrb_data_get_ptr(mrb, self, &mrbal_color_data_type);
   al_unmap_rgb_f(*c, &r, &g, &b);
   ary = mrb_ary_new_capa(mrb, 3);
   mrb_ary_push(mrb, ary, mrb_float_value(mrb, r));
@@ -132,7 +132,7 @@ color_unmap_rgba(mrb_state *mrb, mrb_value self)
   unsigned char b;
   unsigned char a;
   mrb_value ary;
-  Data_Get_Struct(mrb, self, &mrbal_color_data_type, c);
+  c = mrb_data_get_ptr(mrb, self, &mrbal_color_data_type);
   al_unmap_rgba(*c, &r, &g, &b, &a);
   ary = mrb_ary_new_capa(mrb, 4);
   mrb_ary_push(mrb, ary, mrb_fixnum_value(r));
@@ -151,7 +151,7 @@ color_unmap_rgba_f(mrb_state *mrb, mrb_value self)
   float b;
   float a;
   mrb_value ary;
-  Data_Get_Struct(mrb, self, &mrbal_color_data_type, c);
+  c = mrb_data_get_ptr(mrb, self, &mrbal_color_data_type);
   al_unmap_rgba_f(*c, &r, &g, &b, &a);
   ary = mrb_ary_new_capa(mrb, 4);
   mrb_ary_push(mrb, ary, mrb_float_value(mrb, r));
@@ -168,28 +168,28 @@ color_inspect(mrb_state *mrb, mrb_value self)
   ALLEGRO_COLOR *c;
   char const *s;
   int len;
-  Data_Get_Struct(mrb, self, &mrbal_color_data_type, c);
+  c = mrb_data_get_ptr(mrb, self, &mrbal_color_data_type);
   s = mrb_obj_classname(mrb, self);
   len = snprintf(buf, sizeof(buf), "#<%s: r=%f, g=%f, b=%f, a=%f>", s, c->r, c->g, c->b, c->a);
   return mrb_str_new(mrb, buf, len);
 }
 
-#define ATTR(attr) static mrb_value                       \
-color_ ## attr ## _getter(mrb_state *mrb, mrb_value self) \
-{                                                         \
-  ALLEGRO_COLOR *c;                                       \
-  Data_Get_Struct(mrb, self, &mrbal_color_data_type, c);  \
-  return mrb_float_value(mrb, c->attr);                   \
-}                                                         \
-static mrb_value                                          \
-color_ ## attr ## _setter(mrb_state *mrb, mrb_value self) \
-{                                                         \
-  ALLEGRO_COLOR *c;                                       \
-  mrb_float f;                                            \
-  Data_Get_Struct(mrb, self, &mrbal_color_data_type, c);  \
-  mrb_get_args(mrb, "f", &f);                             \
-  c->attr = mrbal_clamp_f(f);                             \
-  return mrb_float_value(mrb, f);                         \
+#define ATTR(attr) static mrb_value                         \
+color_ ## attr ## _getter(mrb_state *mrb, mrb_value self)   \
+{                                                           \
+  ALLEGRO_COLOR *c;                                         \
+  c = mrb_data_get_ptr(mrb, self, &mrbal_color_data_type);  \
+  return mrb_float_value(mrb, c->attr);                     \
+}                                                           \
+static mrb_value                                            \
+color_ ## attr ## _setter(mrb_state *mrb, mrb_value self)   \
+{                                                           \
+  ALLEGRO_COLOR *c;                                         \
+  mrb_float f;                                              \
+  c = mrb_data_get_ptr(mrb, self, &mrbal_color_data_type);  \
+  mrb_get_args(mrb, "f", &f);                               \
+  c->attr = mrbal_clamp_f(f);                               \
+  return mrb_float_value(mrb, f);                           \
 }
 
 ATTR(r)

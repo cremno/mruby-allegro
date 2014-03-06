@@ -19,11 +19,11 @@
 #define C_ALLEGRO_FONT        (mrbal_get_const(mrb, "Font"))
 #define C_ALLEGRO_TIMEOUT     (mrbal_get_const(mrb, "Timeout"))
 
-#define Check_Destroyed(mrb, obj, t, sval) do {                \
-  Data_Get_Struct(mrb, obj, &mrbal_ ## t ## _data_type, sval); \
-  if (!sval) {                                                 \
-    mrb_raise(mrb, E_ALLEGRO_ERROR, #t " is destroyed");       \
-  }                                                            \
+#define Check_Destroyed(mrb, obj, t, sval) do {                  \
+  sval = mrb_data_get_ptr(mrb, obj, &mrbal_ ## t ## _data_type); \
+  if (!sval) {                                                   \
+    mrb_raise(mrb, E_ALLEGRO_ERROR, #t " is destroyed");         \
+  }                                                              \
 } while(0)
 
 #define Check_Destroyed2(mrb, t, sval) do {              \
