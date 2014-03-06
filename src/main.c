@@ -49,7 +49,7 @@ mrb_mruby_allegro_gem_init(mrb_state* mrb)
   mruby_allegro_image_init(mrb); mrb_gc_arena_restore(mrb, ai);
   mruby_allegro_dialog_init(mrb); mrb_gc_arena_restore(mrb, ai);
   mruby_allegro_primitives_init(mrb); mrb_gc_arena_restore(mrb, ai);
-  consts_init(mrb); mrb_gc_arena_restore(mrb, ai);
+  mrbal_consts_init(mrb); mrb_gc_arena_restore(mrb, ai);
 #ifdef MRUBY_ALLEGRO_AUTOINIT
   if (!al_init()) {
     quit("failed to initialize allegro!\n");
